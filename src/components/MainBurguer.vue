@@ -14,18 +14,22 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
+  import { ref,defineEmits } from 'vue'
 
+  const emit = defineEmits(['add-to-cart'])
   const burgers = ref([
     { id: 1, name: 'Hamburguesa Clásica', description: 'Carne, lechuga y tomate', price: 500, image: 'burguer1.jpg' },
     { id: 2, name: 'Hamburguesa BBQ', description: 'Carne, salsa BBQ y cebolla caramelizada', price: 600, image: 'burguer1.jpg' },
     { id: 3, name: 'Hamburguesa Vegetariana', description: 'Hamburguesa de garbanzos con guacamole', price: 550, image: 'burguer1.jpg' },
   ])
   
-    // Función para agregar hamburguesa al carrito (simulada)
+  // Emitir el producto al carrito
   const addToCart = (burger) => {
-    console.log(`Agregada al carrito: ${burger.name}`)
+  emit('add-to-cart', burger)
   }
+  
+
+
   </script>
   
   <style scoped>

@@ -8,7 +8,7 @@
              <img :src="`/img/${gaseosa.image}`" :alt="gaseosa.name" width="150" />
              <p>{{ gaseosa.description }}</p>
              <p>Precio: ${{ gaseosa.price }}</p>
-             <button @click="addToCart(burger)">Agregar al carrito</button>
+             <button @click="addToCart(gaseosa)">Agregar al carrito</button>
         </li>
     </ul>
 </div>
@@ -17,15 +17,20 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
+import {ref,defineEmits} from 'vue'
+
+const emit = defineEmits(['add-to-cart'])
+
 
 const gaseosas = ref([
     { id: 1, name: 'Coca-Cola', description: 'Gaseosa de cola', price: 200, image: 'gaseosa1.jpg' },
     { id: 2, name: 'Sprite', description: 'Gaseosa de limón', price: 200, image: 'gaseosa1.jpg' },
     { id: 3, name: 'Fanta', description: 'Gaseosa de naranja', price: 200, image: 'gaseosa1.jpg' },
 ])
+
+// Emitir al carrito
 const addToCart = (gaseosa) => {
-    console.log(`Agregada al carrito: ${gaseosa.name}`)
+  emit('add-to-cart', gaseosa)
 }
 </script>
 
