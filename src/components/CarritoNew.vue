@@ -5,8 +5,10 @@
         <h2>🛒 Carrito</h2>
 
         <ul>
-            <li v-for="item in cart" :key="item.id">
-            {{ item.name }} - ${{ item.price }}
+            <li v-for="(item, index) in cart" :key="index">
+            <h3>{{ item.name }} (x{{ item.quantity }})</h3>
+            <p>Precio unitario: ${{ item.price }}</p>
+            <p>Subtotal: ${{ item.price * item.quantity }}</p>
             </li>
         </ul>
 
@@ -14,7 +16,7 @@
          <p v-if="cart.length ===0">El carrito está vacío</p>
 
           <!-- Total del carrito -->
-         <p v-if="cart.length > 0">Total: ${{ total }}</p>
+         <p v-if="cart.length > 0">Total: ${{ totalPrice }}</p>
 
     </div>
 
@@ -31,9 +33,11 @@ const props = defineProps({
         required: true
     }
 })
-// Computed para calcular el total del carrito
-const total = computed(() => {
-    return props.cart.reduce((sum, item) => sum + item.price, 0)
+// Calcular el total del carrito
+const totalPrice = computed(() => {
+  return props.cart.reduce((sum, item) => {
+    return sum + (item.price * item.quantity)
+  }, 0)
 })
 
 </script>
