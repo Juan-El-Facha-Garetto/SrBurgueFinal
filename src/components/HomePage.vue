@@ -28,16 +28,18 @@ const cart = ref([])
 
 // Función para agregar productos al carrito
 const addToCart = (product) => {
-  const index = cart.value.findIndex(item => item.id === product.id)
+  // Buscar si ya existe el producto en el carrito por su ID
+  const existing = cart.value.find(item => item.id === product.id)
 
-  if (index === -1) {
-    // Si el producto no está en el carrito, agregarlo
-    cart.value.push(product)
+  if (existing) {
+    // Si ya existe, aumentar la cantidad
+    existing.quantity += product.quantity
   } else {
-    // Si el producto ya está en el carrito, solo actualizamos la cantidad
-    cart.value[index].quantity += product.quantity
+    // Si no existe, agregarlo al carrito con su cantidad
+    cart.value.push({ ...product })
   }
 }
+
 </script>
 
 <style scoped>
