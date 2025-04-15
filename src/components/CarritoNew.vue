@@ -2,7 +2,7 @@
 
     <div class="cart">
 
-        <h2>🛒 Carrito</h2>
+        <h2>🛒 Carrito({{ totalItems }})</h2>
 
         <ul>
             <li v-for="item in cart" :key="item.id">
@@ -18,7 +18,7 @@
          <p v-if="cart.length ===0">El carrito está vacío</p>
 
          <!-- Vaciar Carrito Completo -->
-         <button v-if="cart.length >0"  @click="$emit('clear-cart')">🧹 Vaciar carrito</button>
+         <button v-if="cart.length >0"  @click="confirmRemoveCart">🧹 Vaciar carrito</button>
           <!-- Total del carrito -->
          <p v-if="cart.length > 0">Total: ${{ totalPrice }}</p>
 
@@ -29,11 +29,19 @@
 <script setup>
 import { computed,defineProps,defineEmits } from 'vue'
 
+const confirmRemoveCart = () =>{
+  if(confirm('¿Estás seguro de que deseas eliminar este producto del carrito?😭')){
+    emit('clear-cart')
+}
+}
+
 
 // Función para eliminar un producto del carrito
 const emit = defineEmits(['remove-from-cart'])
 const removeItem = (id) => {
-    emit('remove-from-cart', id)
+  if (confirm('¿Estás seguro de que deseas eliminar este producto del carrito?😭')) {
+    // Si el usuario confirma, emitimos el evento para eliminar el producto
+    emit('remove-from-cart', id)}
 }
 
 //Propiedad que recibe el carrito desde el componente padre (HomePage)
@@ -46,9 +54,17 @@ const props = defineProps({
 // Calcular el total del carrito
 const totalPrice = computed(() => {
   return props.cart.reduce((sum, item) => {
-    return sum + (item.price * item.quantity)
+    const price = Number(item.price) || 0; // Convierte a número y asigna 0 si no es válido
+    const quantity = Number(item.quantity) || 0; // Lo mismo para la cantidad
+    return sum + (price * quantity)
   }, 0)
 })
+
+// Calcular el total de items en el carrito
+const totalItems = computed(() => {
+  return props.cart.reduce((sum, item) =>  sum + item.quantity, 0)
+})
+
 
 </script>
 

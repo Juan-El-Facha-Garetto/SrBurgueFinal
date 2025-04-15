@@ -45,6 +45,7 @@ const addToCart = (product) => {
     // Si no existe, agregarlo al carrito con su cantidad
     cart.value.push({ ...product })
   }
+  alert(`${product.name} agregado al carrito 👀`)
 }
 
 </script>

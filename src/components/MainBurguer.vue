@@ -1,8 +1,15 @@
 <template>
     <div>
       <h2>Menú de Hamburguesas</h2>
+
+      <select v-model="selectedType">
+        <option value="todas">Todas</option>
+        <option value="Carne">Carne</option>
+        <option value="veggie">Veggie</option>
+      </select>
+
       <ul>
-        <li v-for="(burger, index) in burgers" :key="burger.id">
+        <li v-for="(burger, index) in filtroBurguers" :key="burger.id">
           <h3>{{ burger.name }}</h3>
           <img :src="`/img/${burger.image}`" :alt="burger.name" width="150" />
           <p>{{ burger.description }}</p>
@@ -17,16 +24,17 @@
           <button @click="addToCart(burger,index)">Agregar al carrito</button>
         </li>
       </ul>
+
     </div>
   </template>
   
   <script setup>
-  import { ref,defineEmits } from 'vue'
+  import { ref,defineEmits, computed } from 'vue'
 
   const burgers = ref([
-    { id: 0, name: 'Hamburguesa Clásica', description: 'Carne, lechuga y tomate', price: 500, image: 'burguer1.jpg' },
-    { id: 1, name: 'Hamburguesa BBQ', description: 'Carne, salsa BBQ y cebolla caramelizada', price: 600, image: 'burguer1.jpg' },
-    { id: 2, name: 'Hamburguesa Vegetariana', description: 'Hamburguesa de garbanzos con guacamole', price: 550, image: 'burguer1.jpg' },
+    { id: 0, name: 'Hamburguesa Clásica', description: 'Carne, lechuga y tomate', price: 500, image: 'burguer1.jpg', type:'Carne' },
+    { id: 1, name: 'Hamburguesa BBQ', description: 'Carne, salsa BBQ y cebolla caramelizada', price: 600, image: 'burguer1.jpg', type:'Carne' },
+    { id: 2, name: 'Hamburguesa Vegetariana', description: 'Hamburguesa de garbanzos con guacamole', price: 550, image: 'burguer1.jpg', type:'veggie' },
   ])
   
    // Para controlar la cantidad por índice
@@ -53,6 +61,15 @@
   }
   
 
+  // Filtrar hamburguesas por tipo
+  const selectedType = ref('todas')
+
+  const filtroBurguers = computed (() => {
+    if (selectedType.value === 'todas'){
+      return burgers.value
+    }
+    return burgers.value.filter(burger => burger.type === selectedType.value)
+  })
 
   </script>
   
