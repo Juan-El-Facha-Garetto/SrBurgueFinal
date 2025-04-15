@@ -15,7 +15,7 @@
                         <button @click="increase(index)">+</button>
                     </div>
 
-                    <button @click="addToCart(gaseosa, quantities[index])">Agregar al carrito</button>
+                    <button @click="addToCart(gaseosa,index)">Agregar al carrito</button>
             </li>
         </ul>
     </div>
@@ -27,9 +27,9 @@
     import {ref,defineEmits} from 'vue'
 
     const gaseosas = ref([
-        { id: 4, name: 'Coca-Cola', description: 'Gaseosa de cola', price: 200, image: 'gaseosa1.jpg' },
-        { id: 5, name: 'Sprite', description: 'Gaseosa de limón', price: 200, image: 'gaseosa1.jpg' },
-        { id: 6, name: 'Fanta', description: 'Gaseosa de naranja', price: 200, image: 'gaseosa1.jpg' },
+        { id: 3, name: 'Coca-Cola', description: 'Gaseosa de cola', price: 200, image: 'gaseosa1.jpg' },
+        { id: 4, name: 'Sprite', description: 'Gaseosa de limón', price: 200, image: 'gaseosa1.jpg' },
+        { id: 5, name: 'Fanta', description: 'Gaseosa de naranja', price: 200, image: 'gaseosa1.jpg' },
     ])
 
     // Para controlar la cantidad por índice
@@ -47,7 +47,8 @@
     const emit = defineEmits(['add-to-cart'])
 
     // Emitir al carrito con el producto y su cantidad
-    const addToCart = (gaseosa, quantity) => {
+    const addToCart = (gaseosa,index) => {
+    const quantity = quantities.value[index] // Obtener la cantidad del índice
     if (quantity < 1) return  // No permitir agregar cantidades no válidas
     emit('add-to-cart', { ...gaseosa, quantity }) // Enviar el producto con la cantidad
     }

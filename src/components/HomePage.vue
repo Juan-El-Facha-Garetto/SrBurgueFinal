@@ -8,9 +8,12 @@
     <!-- Menú de hamburguesas -->
     <MainBurguer v-if="show === 'burgers'" @add-to-cart="addToCart" />
     <GaseosasMenu v-if="show === 'gaseosas'" @add-to-cart="addToCart" />
-
+    
     <!-- Carrito -->
-    <CarritoNew :cart="cart" />
+    <CarritoNew :cart="cart" @remove-from-cart="handleRemoveFromCart" @clear-cart="cart = []"/>
+    
+  
+    
   </div>
 </template>
 
@@ -25,6 +28,10 @@ const show = ref(null)
 
 // Estado para el carrito
 const cart = ref([])
+
+const handleRemoveFromCart = (id) => {
+  cart.value = cart.value.filter(item => item.id !== id)
+}
 
 // Función para agregar productos al carrito
 const addToCart = (product) => {
