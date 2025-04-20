@@ -1,16 +1,15 @@
 <template>
-  <div>
-    
-    <HomePage/>
+  <div id="app">
+    <router-view />
   </div>
 </template>
 
 <script setup>
-import HomePage from './components/HomePage.vue'
 </script>
 
 <style>
 body {
   font-family: Arial, sans-serif;
+  background-color: var(--Color-base);
 }
 </style>
