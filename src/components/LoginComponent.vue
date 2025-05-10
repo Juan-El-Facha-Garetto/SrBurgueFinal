@@ -13,7 +13,7 @@
         <button type="submit" class="iniciar-button">Iniciar Sesión</button>
     </form>
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <p class="register-link">¿No tienes cuenta? <a href="/register">Regístrate aquí</a></p>
+      <p class="register-link">¿No tienes cuenta? <router-link to="/register">Regístrate aquí</router-link></p>
       <button @click="continueWithoutLogin" class="continue-button">Continuar sin iniciar sesión</button>
   </div>
 </template>

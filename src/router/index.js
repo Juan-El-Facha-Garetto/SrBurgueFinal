@@ -5,6 +5,7 @@ import AdminPanel from '@/components/AdminPanel.vue'
 import CrearProducto from '@/components/CrearProducto.vue'
 import EditarProducto from '@/components/EditarProducto.vue'
 import ListaClientes from '@/components/ListaClientes.vue'
+import RegisterComponent from '@/components/RegisterComponent.vue'
 
 
 
@@ -48,6 +49,11 @@ const routes = [
     path: '/about',
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegisterComponent
   }
 ]
 
