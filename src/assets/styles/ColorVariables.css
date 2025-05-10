@@ -1,0 +1,12 @@
+:root {
+  --primary-color: #cccccc; /* Gris claro */
+  --secondary-color: #0074d9; /* Azul brillante */
+  --accent-color: #7fdbff; /* Azul claro */
+  --error-color: #ff4136; /* Rojo */
+  --border-color: #cccccc; /* Gris claro */
+  --background-color: #001f3f; /* Azul marino */
+  --text-color: #ffffff; /* Blanco */
+  --label-color: #cccccc; /* Gris claro */
+  --Color-base: #FFA07A; /* melocotón claro */
+   
+}
