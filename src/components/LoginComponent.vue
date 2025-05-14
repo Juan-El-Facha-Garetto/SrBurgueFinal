@@ -3,12 +3,12 @@
     <h1>Iniciar Sesión</h1>
       <form @submit.prevent="login" class="login-form">
         <div class="form-group">
-          <label for="username">Usuario:</label>
-          <input type="text" id="username" v-model="username" required />
+          <label for="Usuario">Usuario:</label>
+          <input type="text" id="Usuario" v-model="Usuario" required />
         </div>
       <div class="form-group">
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" v-model="password" required />
+        <label for="ClaveIngreso">Contraseña:</label>
+        <input type="password" id="ClaveIngreso" v-model="ClaveIngreso" required />
       </div>
         <button type="submit" class="iniciar-button">Iniciar Sesión</button>
     </form>
@@ -22,19 +22,20 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-const username = ref('')
-const password = ref('')
+
+const Usuario = ref('')
+const ClaveIngreso = ref('')
 const errorMessage = ref(null)
 const router = useRouter()
 
 const login = () => {
   // Simulación de credenciales
-  const adminCredentials = { username: 'admin', password: 'admin123' }
-  const userCredentials = { username: 'user', password: 'user123' }
+  const adminCredentials = { Usuario: 'admin', ClaveIngreso: 'admin123' }
+  const userCredentials = { Usuario: 'user', ClaveIngreso: 'user123' }
 
-  if (username.value === adminCredentials.username && password.value === adminCredentials.password) {
+  if (Usuario.value === adminCredentials.Usuario && ClaveIngreso.value === adminCredentials.ClaveIngreso) {
     router.push('/admin') // Redirigir al panel de administrador
-  } else if (username.value === userCredentials.username && password.value === userCredentials.password) {
+  } else if (Usuario.value === userCredentials.Usuario && ClaveIngreso.value === userCredentials.ClaveIngreso) {
     router.push('/home') // Redirigir al menú de usuario
   } else {
     errorMessage.value = 'Credenciales incorrectas'

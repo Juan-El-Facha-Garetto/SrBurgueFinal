@@ -14,11 +14,11 @@
       </thead>
       <tbody>
         <tr v-for="cliente in clientes" :key="cliente.id">
-          <td>{{ cliente.nombre }}</td>
-          <td>{{ cliente.apellido }}</td>
-          <td>{{ cliente.telefono }}</td>
-          <td>{{ cliente.direccion }}</td>
-          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.Nombre }}</td>
+          <td>{{ cliente.Apellido }}</td>
+          <td>{{ cliente.CodArea }}-{{ cliente.telefono }}</td>
+          <td>{{ cliente.Calle }} {{ cliente.Altura }}</td>
+          <td>{{ cliente.Email }}</td>
           <td>
             <button @click="editarCliente(cliente.id)">Editar</button>
             <button @click="eliminarCliente(cliente.id)">Eliminar</button>
@@ -30,38 +30,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
+import axios from 'axios'
 import {  useRouter } from 'vue-router'
 
 
-// Lista de clientes simulada
-const clientes = ref([
-  {
-    id: '1',
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    telefono: '123456789',
-    direccion: 'Calle Falsa 123',
-    email: 'juan.perez@example.com',
-  },
-  {
-    id: '2',
-    nombre: 'María',
-    apellido: 'Gómez',
-    telefono: '987654321',
-    direccion: 'Avenida Siempre Viva 456',
-    email: 'maria.gomez@example.com',
-  },
-  {
-    id: '3',
-    nombre: 'Carlos',
-    apellido: 'López',
-    telefono: '555555555',
-    direccion: 'Boulevard Principal 789',
-    email: 'carlos.lopez@example.com',
-  },
-])
+const clientes = ref([]);
 const router = useRouter()
+
+const obtenerClientes = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/api/personas');
+    clientes.value = response.data;
+  } catch (error) {
+    console.error('Error al obtener los clientes:', error);
+    alert('No se pudo cargar la lista de clientes.');
+  }
+};
 
   // Función para redirigir a la vista de edición
 const editarCliente = (id) => {
@@ -69,13 +54,20 @@ const editarCliente = (id) => {
 }
 
 // Función para eliminar un cliente
-const eliminarCliente = (id) => {
-  const index = clientes.value.findIndex((clientes) => clientes.id === id)
-  if (index !== -1) {
-    clientes.value.splice(index, 1)
-    alert('Producto eliminado con éxito')
+const eliminarCliente = async (id) => {
+  try {
+    await axios.delete(`http://localhost:3000/api/personas/${id}`);
+    clientes.value = clientes.value.filter((cliente) => cliente.id !== id);
+    alert('Cliente eliminado con éxito');
+  } catch (error) {
+    console.error('Error al eliminar el cliente:', error);
+    alert('No se pudo eliminar el cliente.');
   }
-}
+};
+
+onMounted(() => {
+  obtenerClientes();
+});
 
 </script>
 
