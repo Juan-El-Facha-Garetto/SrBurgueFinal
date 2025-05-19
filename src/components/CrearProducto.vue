@@ -3,52 +3,89 @@
     <h2>Crear Producto</h2>
     <form @submit.prevent="submitProduct">
       <div class="form-group">
-        <label for="Id">Id:</label>
-        <input type="text" id="Id" v-model="product.Id" required />
+        <label for="categoria">Categoría:</label>
+        <select id="categoria" v-model="product.ID_Categoria" required>
+          <option value="" disabled>Seleccione una categoría</option>
+          <option v-for="cat in categorias" :key="cat.ID" :value="cat.ID">
+            {{ cat.Seccion }} - {{ cat.Detalle }}
+          </option>
+        </select>
       </div>
       <div class="form-group">
         <label for="name">Nombre:</label>
-        <input type="text" id="name" v-model="product.name" required />
+        <input type="text" id="name" v-model="product.Nombre" required />
       </div>
       <div class="form-group">
         <label for="description">Descripción:</label>
-        <textarea id="description" v-model="product.description" required></textarea>
+        <textarea id="description" v-model="product.Descripcion" required></textarea>
       </div>
       <div class="form-group">
         <label for="price">Precio:</label>
-        <input type="number" id="price" v-model="product.price" required />
+        <input type="number" id="price" v-model="product.Precio" required />
       </div>
       <div class="form-group">
         <label for="photo">Foto:</label>
         <input type="file" id="photo" @change="handleFileUpload" />
       </div>
       <button type="submit">Crear Producto</button>
-      <a href="/admin">Volver al menu principal</a>
+      <button type="button" @click="router.push('/admin')">Volver al lobby</button>
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
+const categorias = ref([])
 const product = ref({
-  Id: '',
-  name: '',
-  description: '',
-  price: null,
-  photo: null,
+  ID_Categoria: '',
+  Nombre: '',
+  Descripcion: '',
+  Precio: null,
+  Foto: null,
 })
 
 const handleFileUpload = (event) => {
   const file = event.target.files[0]
-  product.value.photo = file
+  product.value.Foto = file || null
 }
 
-const submitProduct = () => {
-  console.log('Producto creado:', product.value)
-  alert('Producto creado con éxito')
-  // Aquí puedes agregar la lógica para enviar el producto al backend
+const submitProduct = async () => {
+  try {
+    const formData = new FormData();
+    formData.append('ID_Categoria', product.value.ID_Categoria);
+    formData.append('Nombre', product.value.Nombre);
+    formData.append('Descripcion', product.value.Descripcion);
+    formData.append('Precio', product.value.Precio);
+    if (product.value.Foto) {
+      formData.append('Foto', product.value.Foto);
+    }
+
+    await axios.post('http://localhost:3000/api/productos', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    alert('Producto creado con éxito');
+    router.push('/admin') // O la ruta de tu lobby/lista de productos
+    // Opcional: limpiar el formulario o redirigir
+  } catch (error) {
+    alert('Error al crear producto');
+    console.error(error);
+  }
 }
+
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/api/categorias')
+    categorias.value = response.data
+  } catch (error) {
+    console.error('Error al obtener categorías:', error)
+  }
+})
 </script>
 
 <style scoped>

@@ -1,31 +1,31 @@
-    <template>
+<template>
   <div>
-    <h2>Menú Gaseosas</h2>
+    <h2>Menú Guarniciones</h2>
 
     <select v-model="selectedType">
       <option value="todas">Todas</option>
-      <option value="Con Gas">Con Gas</option>
-      <option value="Sin Gas">Sin Gas</option>
-      <option value="Con Alcohol">Con Alcohol</option>
+      <option value="Frito">Frito</option>
+      <option value="Ensalada">Ensalada</option>
+      <option value="Pure">Puré</option>
     </select>
 
     <ul>
-      <li v-for="(gaseosa, index) in filtroGaseosas" :key="gaseosa.ID">
-        <h3>{{ gaseosa.Nombre }}</h3>
+      <li v-for="(guarnicion, index) in filtroGuarniciones" :key="guarnicion.ID">
+        <h3>{{ guarnicion.Nombre }}</h3>
         <img
-          v-if="gaseosa.Foto"
-          :src="`http://localhost:3000/uploads/${gaseosa.Foto}`"
-          :alt="gaseosa.Nombre"
+          v-if="guarnicion.Foto"
+          :src="`http://localhost:3000/uploads/${guarnicion.Foto}`"
+          :alt="guarnicion.Nombre"
           width="150"
         />
-        <p>{{ gaseosa.Descripcion }}</p>
-        <p>Precio: ${{ gaseosa.Precio }}</p>
+        <p>{{ guarnicion.Descripcion }}</p>
+        <p>Precio: ${{ guarnicion.Precio }}</p>
         <div>
           <button @click="decrease(index)">-</button>
           <span>{{ quantities[index] }}</span>
           <button @click="increase(index)">+</button>
         </div>
-        <button @click="addToCart(gaseosa, index)">Agregar al carrito</button>
+        <button @click="addToCart(guarnicion, index)">Agregar al carrito</button>
       </li>
     </ul>
   </div>
@@ -35,7 +35,7 @@
 import { ref, defineEmits, computed, onMounted } from 'vue'
 import axios from 'axios'
 
-const gaseosas = ref([])
+const guarniciones = ref([])
 const quantities = ref([])
 const selectedType = ref('todas')
 
@@ -50,19 +50,19 @@ const decrease = (index) => {
   }
 }
 
-const addToCart = (gaseosa, index) => {
+const addToCart = (guarnicion, index) => {
   const quantity = quantities.value[index]
   if (quantity < 1) return
-  emit('add-to-cart', { ...gaseosa, quantity })
+  emit('add-to-cart', { ...guarnicion, quantity })
 }
 
-// Filtrar gaseosas por tipo
-const filtroGaseosas = computed(() => {
+// Filtrar guarniciones por tipo
+const filtroGuarniciones = computed(() => {
   if (selectedType.value === 'todas') {
-    return gaseosas.value
+    return guarniciones.value
   }
-  return gaseosas.value.filter(
-    gaseosa => gaseosa.CategoriaDetalle === selectedType.value
+  return guarniciones.value.filter(
+    guarnicion => guarnicion.CategoriaDetalle === selectedType.value
   )
 })
 
@@ -70,11 +70,11 @@ const filtroGaseosas = computed(() => {
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:3000/api/productos')
-    // Solo gaseosas: filtra por CategoriaSeccion
-    gaseosas.value = response.data.filter(
-      p => p.CategoriaSeccion && p.CategoriaSeccion === 'Bebida'
+    // Solo guarniciones: filtra por CategoriaSeccion
+    guarniciones.value = response.data.filter(
+      p => p.CategoriaSeccion && p.CategoriaSeccion === 'Guarnicion'
     )
-    quantities.value = gaseosas.value.map(() => 1)
+    quantities.value = guarniciones.value.map(() => 1)
   } catch (error) {
     console.error('Error al cargar productos:', error)
   }
@@ -88,5 +88,3 @@ img {
   display: block;
 }
 </style>
-
-    <style scoped></style>

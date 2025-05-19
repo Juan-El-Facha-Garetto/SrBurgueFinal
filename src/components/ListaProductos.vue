@@ -8,17 +8,23 @@
           <th>Nombre</th>
           <th>Descripción</th>
           <th>Precio</th>
+          <th>Categoría</th> <!-- Nueva columna -->
+          <th>Imagen</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="producto in productos" :key="producto.id">
-          <td>{{ producto.name }}</td>
-          <td>{{ producto.description }}</td>
-          <td>${{ producto.price }}</td>
+        <tr v-for="producto in productos" :key="producto.ID">
+          <td>{{ producto.Nombre }}</td>
+          <td>{{ producto.Descripcion }}</td>
+          <td>${{ producto.Precio }}</td>
+          <td>{{ producto.CategoriaSeccion }} - {{ producto.CategoriaDetalle }}</td> <!-- Mostrar categoría -->
           <td>
-            <button @click="editarProducto(producto.id)">Editar</button>
-            <button @click="eliminarProducto(producto.id)">Eliminar</button>
+            <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" alt="Foto" width="60" />
+          </td>
+          <td>
+            <button @click="editarProducto(producto.ID)">Editar</button>
+            <button @click="eliminarProducto(producto.ID)">Eliminar</button>
           </td>
         </tr>
       </tbody>
@@ -27,37 +33,38 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 const router = useRouter()
+const productos = ref([])
 
-// Lista de productos simulada
-const productos = ref([
-  { id: '1', name: 'Hamburguesa', description: 'Deliciosa hamburguesa', price: 10 , photo: null},
-  { id: '2', name: 'Papas Fritas', description: 'Crujientes papas fritas', price: 5, photo: null},
-  { id: '3', name: 'Refresco', description: 'Refresco frío y refrescante', price: 3, photo: null},
-  { id: '4', name: 'Pizza', description: 'Pizza con ingredientes frescos', price: 12, photo: null},
-  { id: '5', name: 'Ensalada', description: 'Ensalada fresca y saludable', price: 8, photo: null},
-  { id: '6', name: 'Taco', description: 'Taco con carne y vegetales', price: 4, photo: null},
-  { id: '7', name: 'Sopa', description: 'Sopa caliente y reconfortante', price: 6, photo: null},
-])
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/api/productos')
+    productos.value = response.data
+  } catch (error) {
+    console.error('Error al obtener productos:', error)
+  }
+})
 
-// Función para agregar un nuevo producto
 const agregarProducto = () => {
   router.push('/crear-producto')
 }
-// Función para redirigir a la vista de edición
 const editarProducto = (id) => {
   router.push(`/editar-producto/${id}`)
 }
-
-// Función para eliminar un producto
-const eliminarProducto = (id) => {
-  const index = productos.value.findIndex((producto) => producto.id === id)
-  if (index !== -1) {
-    productos.value.splice(index, 1)
-    alert('Producto eliminado con éxito')
+const eliminarProducto = async (id) => {
+  if (confirm('¿Seguro que deseas eliminar este producto?')) {
+    try {
+      await axios.delete(`http://localhost:3000/api/productos/${id}`);
+      productos.value = productos.value.filter(producto => producto.ID !== id);
+      alert('Producto eliminado con éxito');
+    } catch (error) {
+      alert('Error al eliminar producto');
+      console.error(error);
+    }
   }
 }
 </script>
