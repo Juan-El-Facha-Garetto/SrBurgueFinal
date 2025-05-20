@@ -1,13 +1,15 @@
 <template>
+
   <div class="home">
-    <h1>Bienvenidos a SrBurgues</h1>
 
-    <button @click="show = 'burgers'">🍔 Hamburguesas</button>
-    <button @click="show = 'sandwiches'">🥪 Sandwiches</button>
-    <button @click="show = 'nuggets'">🍗 Nuggets</button>
-    <button @click="show = 'guaniciones'">🍟 Guarniciones</button>
-    <button @click="show = 'gaseosas'">🥤 Gaseosas</button>
-
+    <h1 class="Bienvenidos">Bienvenidos a SrBurgues</h1>
+    <div class="botones">
+        <button @click="show = 'burgers'">🍔 Hamburguesas</button>
+        <button @click="show = 'sandwiches'">🥪 Sandwiches</button>
+        <button @click="show = 'nuggets'">🍗 Nuggets</button>
+        <button @click="show = 'guaniciones'">🍟 Guarniciones</button>
+        <button @click="show = 'gaseosas'">🥤 Gaseosas</button>
+    </div>
     <!-- Menú de hamburguesas -->
     <MainBurguer v-if="show === 'burgers'" @add-to-cart="addToCart" />
     <SandwichMenu v-if="show === 'sandwiches'" @add-to-cart="addToCart" />
@@ -18,9 +20,8 @@
     <!-- Carrito -->
     <CarritoNew :cart="cart" @remove-from-cart="handleRemoveFromCart" @clear-cart="cart = []"/>
     
-  
-    
   </div>
+
 </template>
 
 <script setup>
@@ -60,10 +61,32 @@ const addToCart = (product) => {
 </script>
 
 <style scoped>
+
+
 button {
   margin: 10px;
   padding: 10px 20px;
   font-size: 18px;
   cursor: pointer;
+  background-color: #FFD600;
+  border: 3px solid black;
+  font-weight: bold;
+  transition: background 0.2s, border 0.2s;
 }
+button:hover {
+  background-color: #FFEA70;      /* Mostaza más clara al pasar el mouse */
+  border-color: #FFD600;
+}
+
+.Bienvenidos {
+  text-align: center;
+  margin-top: 30px; 
+}
+.botones {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px; 
+}
+
 </style>
