@@ -9,6 +9,7 @@ import RegisterComponent from '@/components/RegisterComponent.vue'
 
 
 
+
 const routes = [
   {
     path: '/',

@@ -1,28 +1,25 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const cors = require("cors");
-const { registerUser } = require("./RegisterConsulta");
+const bodyParser = require("body-parser");
+const { agregarPersona } = require("./AddPersona");
 
 const app = express();
-app.use(bodyParser.json());
 app.use(cors());
+app.use(bodyParser.json());
 
-// Ruta para registrar un usuario
 app.post("/api/register", async (req, res) => {
-  const { Nombre, Apellido, CodArea, Telefono, Calle, Altura, Email, Usuario, ClaveIngreso, idRol } = req.body;
-
-  try {
-    const result = await registerUser(
-      { Nombre, Apellido, CodArea, Telefono, Calle, Altura, Email },
-      { Usuario, ClaveIngreso, idRol }
-    );
-    res.status(201).send(result);
-  } catch (error) {
-    res.status(500).send({ message: "Error al registrar el usuario" });
+  const Persona = req.body;
+  const resultado = await agregarPersona(Persona);
+  if (resultado.ok) {
+    res.status(201).json({ 
+          message: "Usuario registrado exitosamente",
+        idPersona: resultado.idPersona
+       });
+  } else {
+    res.status(500).json({ message: resultado.error || "Error al registrar usuario" });
   }
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+app.listen(8080, () => {
+  console.log("Backend corriendo en http://localhost:8080");
 });

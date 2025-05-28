@@ -1,42 +1,34 @@
 <template>
   <div class="register-component">
-    <h2>Registro de Usuario</h2>
+    <h2>Registro de Persona</h2>
     <form @submit.prevent="handleSubmit">
       <div>
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" v-model="form.Nombre" required />
+        <label for="Nombre">Nombre:</label>
+        <input type="text" id="Nombre" v-model="form.Nombre" required />
       </div>
       <div>
-        <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" v-model="form.Apellido" required />
+        <label for="Apellido">Apellido:</label>
+        <input type="text" id="Apellido" v-model="form.Apellido" required />
       </div>
       <div>
-        <label for="codigoArea">Código de Área:</label>
-        <input type="number" id="codigoArea" v-model="form.CodArea" required min="1" max="99999" />
+        <label for="CodArea">Código de Área:</label>
+        <input type="number" id="CodArea" v-model="form.CodArea" required min="1" max="99999" />
       </div>
       <div>
-        <label for="telefono">Número de Teléfono:</label>
-        <input type="number" id="telefono" v-model="form.Telefono" required  />
+        <label for="Telefono">Número de Teléfono:</label>
+        <input type="number" id="Telefono" v-model="form.Telefono" required  />
       </div>
       <div>
-        <label for="calle">Calle:</label>
-        <input type="text" id="calle" v-model="form.Calle" required />
+        <label for="Calle">Calle:</label>
+        <input type="text" id="Calle" v-model="form.Calle" required />
       </div>
       <div>
-        <label for="altura">Altura:</label>
-        <input type="number" id="numeroCalle" v-model="form.Altura" required min="1" />
+        <label for="Altura">Altura:</label>
+        <input type="number" id="Altura" v-model="form.Altura" required min="1" />
       </div>
       <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" v-model="form.Email" required />
-      </div>
-      <div>
-        <label for="usuario">Usuario:</label>
-        <input type="text" id="usuario" v-model="form.Usuario" required />
-      </div>
-      <div>
-        <label for="claveIngreso">Clave de Ingreso:</label>
-        <input type="password" id="claveIngreso" v-model="form.ClaveIngreso" required />
+        <label for="Email">Email:</label>
+        <input type="text" id="Email" v-model="form.Email" required />
       </div>
       <button type="submit">Registrarse</button>
     </form>
@@ -56,15 +48,15 @@ export default {
         Calle: "",
         Altura: "",
         Email: "",
-        Usuario: "",
-        ClaveIngreso: "",
       },
+      idPersonaRegistrada: null, // Para almacenar el ID de la persona registrada
     };
   },
   methods: {
   async handleSubmit() {
     try {
-      const response = await fetch("http://localhost:3000/api/register", {
+      console.log("Datos a enviar:", this.form);
+      const response = await fetch("http://localhost:8080/api/register", {
         method: "POST",
         headers: {
         "Content-Type": "application/json", 
@@ -73,7 +65,9 @@ export default {
       });
 
       if (response.ok) {
+        const data = await response.json();
         alert("Registro exitoso");
+        this.idPersonaRegistrada = data.id; // Asigna el ID de la persona registrada
         this.form = {
           Nombre: "",
           Apellido: "",
@@ -82,8 +76,6 @@ export default {
           Calle: "",
           Altura: "",
           Email: "",
-          Usuario: "",
-          ClaveIngreso: "",
         };
       } else {
         const errorData = await response.json();
@@ -91,7 +83,7 @@ export default {
       }
     } catch (error) {
       console.error("Error al enviar los datos:", error);
-      alert("Error al registrar el usuario");
+      alert("Error al registrar la persona");
     }
   },
 },
