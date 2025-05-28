@@ -14,6 +14,7 @@ const connectionSettings = {
 export async function getConnection() {
     try {
         return await mssql.connect(connectionSettings);
+        
     }
    catch (error) {
         console.error("Error connecting to the database: ", error);
