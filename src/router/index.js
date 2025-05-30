@@ -6,6 +6,7 @@ import CrearProducto from '@/components/CrearProducto.vue'
 import EditarProducto from '@/components/EditarProducto.vue'
 import ListaClientes from '@/components/ListaClientes.vue'
 import RegisterComponent from '@/components/RegisterComponent.vue'
+import UsuarioComponent from '@/components/UsuarioComponent.vue'
 
 
 
@@ -54,6 +55,11 @@ const routes = [
     path: '/register',
     name: 'register',
     component: RegisterComponent
+  },
+  {
+    path: '/usuario',
+    name: 'usuario',
+    component: UsuarioComponent
   }
 ]
 

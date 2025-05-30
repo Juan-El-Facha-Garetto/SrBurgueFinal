@@ -36,6 +36,7 @@
 </template>
 
 <script>
+
 export default {
   name: "RegisterComponent",
   data() {
@@ -49,6 +50,7 @@ export default {
         Altura: "",
         Email: "",
       },
+      idPersona: null, // Este ID puede ser utilizado para registrar el usuario posteriormente
     };
   },
  methods: {
@@ -72,6 +74,7 @@ export default {
 
       if (response.ok) {
         const data = await response.json();
+        this.$emit('persona-registrada', data.idPersona); // Emitir el ID de la persona registrada
         alert("Registro exitoso. ID Persona: " + data.idPersona);
         this.form = {
           Nombre: "",
@@ -82,6 +85,8 @@ export default {
           Altura: "",
           Email: "",
         };
+        // Redirigir al usuario a la página de registro de usuario
+        this.$router.push({ name: 'usuario', query: { idPersona: data.idPersona } });
       } else {
         const errorData = await response.json();
         alert("Error al registrar: " + errorData.message);

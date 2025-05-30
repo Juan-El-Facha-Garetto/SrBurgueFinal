@@ -4,6 +4,13 @@ export const agregarPersona = async (req, res) => {
   try {
     const { Nombre, Apellido, CodArea, Telefono, Calle, Altura, Email } = req.body;
     const pool = await getConnection();
+
+    const emailCheck = await pool.request()
+      .input("Email", mssql.VarChar, Email)
+      .query("SELECT COUNT(*) AS count FROM Persona WHERE Email = @Email");
+    if (emailCheck.recordset[0].count > 0) {
+      return res.status(400).json({ message: "El email ya está registrado" });
+    }
     const result = await pool.request()
       .input("Nombre", mssql.VarChar, Nombre)
       .input("Apellido", mssql.VarChar, Apellido)
@@ -17,7 +24,7 @@ export const agregarPersona = async (req, res) => {
       OUTPUT INSERTED.ID
         VALUES (@Nombre, @Apellido, @CodArea, @Telefono, @Calle, @Altura, @Email)
       `);
-    const idPersona = result.recordset[0].ID_Persona;
+    const idPersona = result.recordset[0].ID;
     res.status(201).json({ message: "Persona registrada exitosamente", idPersona });
   } catch (error) {
     console.error("Error al registrar persona:", error);

@@ -5,7 +5,7 @@ import path from 'path';
 import productosRoutes from './routes/productosRoutes.js';
 import categoriasRoutes from './routes/categoriasRoutes.js';
 import personaRoutes from './routes/personaRoutes.js';
-
+import usuarioRoutes from './routes/usuarioRoutes.js';
 
 
 const app = express();
@@ -19,6 +19,7 @@ app.use('/api/productos', productosRoutes);
 app.use('/api/categorias', categoriasRoutes);
 app.use('/api/personas', personaRoutes);
 app.use('/all', personaRoutes);
+app.use('/api/usuarios', usuarioRoutes);
 
 // Servir archivos estáticos
 app.use('/uploads', express.static('uploads'));
