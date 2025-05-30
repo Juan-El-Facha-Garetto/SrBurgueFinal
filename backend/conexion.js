@@ -2,9 +2,9 @@ import mssql from 'mssql';
 
 const connectionSettings = {
     server: 'localhost',
-    database: 'BurguersFinal1',
-    user: 'Juan',
-    password: 'Juan123',
+    database: 'BurguersFinal',
+    user: 'ASUSMAS',
+    password: 'mati123',
     options: {
         encrypt: true,
         trustServerCertificate: true,

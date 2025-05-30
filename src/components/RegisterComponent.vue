@@ -3,32 +3,32 @@
     <h2>Registro de Usuario</h2>
     <form @submit.prevent="handleSubmit">
       <div>
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" v-model="form.nombre" required />
+        <label for="Nombre">Nombre:</label>
+        <input type="text" id="Nombre" v-model="form.Nombre" required />
       </div>
       <div>
-        <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" v-model="form.apellido" required />
+        <label for="Apellido">Apellido:</label>
+        <input type="text" id="Apellido" v-model="form.Apellido" required />
       </div>
       <div>
-        <label for="codigoArea">Código de Área:</label>
-        <input type="text" id="codigoArea" v-model="form.codigoArea" required />
+        <label for="CodArea">Código de Área:</label>
+        <input type="text" id="CodArea" v-model="form.CodArea" required />
       </div>
       <div>
-        <label for="telefono">Número de Teléfono:</label>
-        <input type="text" id="telefono" v-model="form.telefono" required />
+        <label for="Telefono">Número de Teléfono:</label>
+        <input type="text" id="Telefono" v-model="form.Telefono" required />
       </div>
       <div>
         <label for="calle">Calle:</label>
-        <input type="text" id="calle" v-model="form.calle" required />
+        <input type="text" id="Calle" v-model="form.Calle" required />
       </div>
       <div>
-        <label for="numeroCalle">Número de la Calle:</label>
-        <input type="text" id="numeroCalle" v-model="form.numeroCalle" required />
+        <label for="Altura">Número de la Calle:</label>
+        <input type="number" id="Altura" v-model="form.Altura" required />
       </div>
       <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" v-model="form.email" required />
+        <label for="Email">Email:</label>
+        <input type="email" id="Email" v-model="form.Email" required />
       </div>
       <button type="submit">Registrarse</button>
     </form>
@@ -41,23 +41,57 @@ export default {
   data() {
     return {
       form: {
-        nombre: "",
-        apellido: "",
-        codigoArea: "",
-        telefono: "",
-        calle: "",
-        numeroCalle: "",
-        email: "",
+        Nombre: "",
+        Apellido: "",
+        CodArea: "",
+        Telefono: "",
+        Calle: "",
+        Altura: "",
+        Email: "",
       },
     };
   },
-  methods: {
-    handleSubmit() {
-      console.log("Datos del formulario:", this.form);
-      // Aquí puedes manejar el envío del formulario, como enviarlo a un servidor
-      alert("Registro exitoso");
-    },
+ methods: {
+  async handleSubmit() {
+    try {
+      const response = await fetch("http://localhost:3000/api/personas/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          Nombre: this.form.Nombre,
+          Apellido: this.form.Apellido,
+          CodArea: this.form.CodArea,
+          Telefono: this.form.Telefono,
+          Calle: this.form.Calle,
+          Altura: this.form.Altura, 
+          Email: this.form.Email,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert("Registro exitoso. ID Persona: " + data.idPersona);
+        this.form = {
+          Nombre: "",
+          Apellido: "",
+          CodArea: "",
+          Telefono: "",
+          Calle: "",
+          Altura: "",
+          Email: "",
+        };
+      } else {
+        const errorData = await response.json();
+        alert("Error al registrar: " + errorData.message);
+      }
+    } catch (error) {
+      alert("Error al enviar los datos");
+      console.error(error);
+    }
   },
+}
 };
 </script>
 

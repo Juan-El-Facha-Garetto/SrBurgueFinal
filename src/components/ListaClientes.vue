@@ -30,38 +30,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {  useRouter } from 'vue-router'
 
+const clientes = ref([]);
+const router = useRouter();
 
-// Lista de clientes simulada
-const clientes = ref([
-  {
-    id: '1',
-    nombre: 'Juan',
-    apellido: 'Pérez',
-    telefono: '123456789',
-    direccion: 'Calle Falsa 123',
-    email: 'juan.perez@example.com',
-  },
-  {
-    id: '2',
-    nombre: 'María',
-    apellido: 'Gómez',
-    telefono: '987654321',
-    direccion: 'Avenida Siempre Viva 456',
-    email: 'maria.gomez@example.com',
-  },
-  {
-    id: '3',
-    nombre: 'Carlos',
-    apellido: 'López',
-    telefono: '555555555',
-    direccion: 'Boulevard Principal 789',
-    email: 'carlos.lopez@example.com',
-  },
-])
-const router = useRouter()
+// Cargar clientes desde el backend al montar el componente
+onMounted(async () => {
+  try {
+    const response = await fetch('http://localhost:3000/api/personas/all')
+    if (response.ok) {
+      const data = await response.json()
+      console.log('Clientes cargados:',data);
+      // Mapea los datos para mostrar dirección como "Calle Altura"
+      clientes.value = data.map(c => ({
+        id: c.ID,
+        nombre: c.Nombre,
+        apellido: c.Apellido,
+        telefono: `${c.CodArea} ${c.Telefono}`,
+        direccion: `${c.Calle} ${c.Altura}`,
+        email: c.Email
+      }))
+    } else {
+      alert('Error al cargar clientes')
+    }
+  } catch (error) {
+    alert('Error de conexión al cargar clientes')
+  }
+});
+
 
   // Función para redirigir a la vista de edición
 const editarCliente = (id) => {

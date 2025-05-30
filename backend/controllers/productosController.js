@@ -23,19 +23,29 @@ export const getProductos = async (req, res) => {
 
 export const createProducto = async (req, res) => {
     try {
+        console.log('Body:', req.body);
+        console.log('File:', req.file);
+
         const { ID_Categoria, Nombre, Descripcion, Precio } = req.body;
         const Foto = req.file ? req.file.filename : null;
+
         const pool = await getConnection();
+        console.log('Conexión establecida');
+
         await pool.request()
             .input('ID_Categoria', ID_Categoria)
             .input('Nombre', Nombre)
             .input('Descripcion', Descripcion)
             .input('Precio', Precio)
             .input('Foto', Foto)
-            .query('INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Precio, Foto) VALUES (@ID_Categoria, @Nombre, @Descripcion, @Precio, @Foto)');
+            .query(`
+                INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Precio, Foto)
+                VALUES (@ID_Categoria, @Nombre, @Descripcion, @Precio, @Foto)
+            `);
+
         res.status(201).json({ message: 'Producto creado' });
     } catch (error) {
-        console.error(error);
+        console.error('Error en createProducto:', error);
         res.status(500).json({ error: 'Error al crear producto' });
     }
 };

@@ -12,6 +12,9 @@
         <li>
           <a href="#" @click.prevent="mostrarComponente('clientes')">Ver Clientes</a>
         </li>
+        <li>
+          <a href="#" @click.prevent="mostrarComponente('Categorias')">Categorias</a>
+        </li>
       </ul>
     </nav>
     <div class="admin-dynamic-content">
