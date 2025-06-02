@@ -27,19 +27,34 @@ const password = ref('')
 const errorMessage = ref(null)
 const router = useRouter()
 
-const login = () => {
-  // Simulación de credenciales
-  const adminCredentials = { username: 'admin', password: 'admin123' }
-  const userCredentials = { username: 'user', password: 'user123' }
+const login = async () => {
+  errorMessage.value = null;
+  try {
+    const response = await fetch('http://localhost:3000/api/usuarios/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Usuario: username.value,
+        ClaveIngreso: password.value
+      })
+    });
+    const data = await response.json();
 
-  if (username.value === adminCredentials.username && password.value === adminCredentials.password) {
-    router.push('/admin') // Redirigir al panel de administrador
-  } else if (username.value === userCredentials.username && password.value === userCredentials.password) {
-    router.push('/home') // Redirigir al menú de usuario
-  } else {
-    errorMessage.value = 'Credenciales incorrectas'
+    if (!response.ok) {
+      errorMessage.value = data.message;
+      return;
+    }
+
+    // Redirección según el rol
+    if (data.rol === 'admin') {
+      router.push('/admin'); // Cambia '/admin' por la ruta de tu panel de admin
+    } else if (data.rol === 'usuario') {
+      router.push('/home'); // Cambia '/home' por la ruta de usuario común
+    }
+  } catch (error) {
+    errorMessage.value = 'Error de conexión con el servidor';
   }
-}
+};
 
 const continueWithoutLogin = () => {
   router.push('/home') // Redirigir al menú directamente
