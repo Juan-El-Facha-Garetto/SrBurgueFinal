@@ -1,4 +1,7 @@
 import { getConnection } from '../conexion.js';
+import mssql from 'mssql';
+
+
 export const getProductos = async (req, res) => {
     try {
         const pool = await getConnection();
@@ -120,4 +123,35 @@ export const updateProducto = async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Error al actualizar producto' });
     }
+};
+
+export const getProductosFiltrados = async (req, res) => {
+  try {
+    console.log('consulta recibida:', req.query);
+    const { idCategoria } = req.query;
+    const pool = await getConnection();
+    let query = `
+      SELECT 
+        P.ID, 
+        P.ID_Categoria, 
+        P.Nombre, 
+        P.Descripcion, 
+        P.Precio, 
+        P.Foto,
+        C.Seccion AS CategoriaSeccion,
+        C.Detalle AS CategoriaDetalle
+      FROM Producto P
+      LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
+    `;
+    if (idCategoria) {
+      query += " WHERE P.ID_Categoria = @idCategoria";
+    }
+    const request = pool.request();
+    if (idCategoria) request.input('idCategoria', mssql.Int, idCategoria);
+    const result = await request.query(query);
+    console.log('Productos filtrados:', result.recordset);
+    res.json(result.recordset);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener productos' });
+  }
 };

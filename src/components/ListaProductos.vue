@@ -8,7 +8,7 @@
           <th>Nombre</th>
           <th>Descripción</th>
           <th>Precio</th>
-          <th>Categoría</th> <!-- Nueva columna -->
+          <th>Categoría</th> 
           <th>Imagen</th>
           <th>Acciones</th>
         </tr>

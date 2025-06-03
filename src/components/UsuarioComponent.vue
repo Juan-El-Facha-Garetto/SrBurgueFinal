@@ -15,7 +15,7 @@ const route = useRoute();
 
 const form = ref({
   ID_Persona: route.query.idPersona, 
-    ID_Rol: 2,      // Siempre 2 según tu requerimiento
+    ID_Rol: 2,      
   Usuario: '',
   ClaveIngreso: ''
 })

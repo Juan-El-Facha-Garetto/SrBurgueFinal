@@ -7,7 +7,7 @@ import EditarProducto from '@/components/EditarProducto.vue'
 import ListaClientes from '@/components/ListaClientes.vue'
 import RegisterComponent from '@/components/RegisterComponent.vue'
 import UsuarioComponent from '@/components/UsuarioComponent.vue'
-
+import ListaProductosDinamica from '@/components/ListaProductosDinamica.vue'
 
 
 const routes = [
@@ -15,6 +15,11 @@ const routes = [
     path: '/',
     name: 'login',
     component: LoginComponent
+  },
+  {
+    path: '/productos/:categoria',
+    name: 'productos-categoria',
+    component: ListaProductosDinamica
   },
   {
     path: '/home',
