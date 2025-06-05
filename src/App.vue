@@ -5,6 +5,38 @@
 </template>
 
 <script setup>
+import { ref, provide } from 'vue'
+
+const cart = ref([])
+
+function addToCart(producto, cantidad = 1) {
+  const index = cart.value.findIndex(item => item.id === producto.ID)
+  if (index !== -1) {
+    cart.value[index].quantity += cantidad
+  } else {
+    cart.value.push({
+      id: producto.ID,
+      name: producto.Nombre,
+      price: producto.Precio,
+      quantity: cantidad,
+      image: producto.Foto
+    })
+  }
+}
+
+function handleRemoveFromCart(id) {
+  cart.value = cart.value.filter(item => item.id !== id)
+}
+
+function handleClearCart() {
+  cart.value = []
+}
+
+// Proveer el carrito y las funciones a toda la app
+provide('cart', cart)
+provide('addToCart', addToCart)
+provide('handleRemoveFromCart', handleRemoveFromCart)
+provide('handleClearCart', handleClearCart)
 </script>
 
 <style>

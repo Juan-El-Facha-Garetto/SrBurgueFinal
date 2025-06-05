@@ -8,9 +8,13 @@ import ListaClientes from '@/components/ListaClientes.vue'
 import RegisterComponent from '@/components/RegisterComponent.vue'
 import UsuarioComponent from '@/components/UsuarioComponent.vue'
 import ListaProductosDinamica from '@/components/ListaProductosDinamica.vue'
+import CarritoView from '@/views/CarritoView.vue'
 
 
 const routes = [
+   { path: '/carrito', 
+    name: 'Carrito', 
+    component: CarritoView },
   {
     path: '/',
     name: 'login',

@@ -1,5 +1,9 @@
 <template>
 
+    <button @click="irAlHome" class="volver-home">
+      Volver al Home
+    </button>
+
     <div class="cart">
 
         <h2>🛒 Carrito({{ totalItems }})</h2>
@@ -10,7 +14,7 @@
             <p>Precio unitario: ${{ item.price }}</p>
             <p>Subtotal: ${{ item.price * item.quantity }}</p>
             <button @click="removeItem(item.id)">❌ Eliminar</button>
-            <img :src="`/img/${item.image}`" :alt="item.name" width="50" />
+            <img :src="`http://localhost:3000/uploads/${item.image}`" :alt="item.name" width="50" />
             </li>
         </ul>
 
@@ -23,11 +27,18 @@
          <p v-if="cart.length > 0">Total: ${{ totalPrice }}</p>
 
     </div>
-
+    <button v-if="cart.length > 0" @click="confirmarCompra">Confirmar compra</button>
 </template>
 
 <script setup>
 import { computed,defineProps,defineEmits } from 'vue'
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const irAlHome = () => {
+  router.push({ name: 'home' }) // o router.push('/') si tu home es la raíz
+}
+
 
 const confirmRemoveCart = () =>{
   if(confirm('¿Estás seguro de que deseas eliminar este producto del carrito?😭')){
@@ -65,6 +76,33 @@ const totalItems = computed(() => {
   return props.cart.reduce((sum, item) =>  sum + item.quantity, 0)
 })
 
+// ...dentro de <script setup>
+const confirmarCompra = async () => {
+  // Arma el objeto pedido
+  const pedido = {
+    ID_Usuario: 1, // Cambia por el usuario real si tienes login
+    ID_MetodosDePago: 1, // Cambia por el método real si tienes selector
+    Total: totalPrice.value // Usa el total calculado del carrito
+    // Si solo quieres guardar esto, no envíes los productos
+  }
+
+  try {
+    const response = await fetch('http://localhost:3000/api/pedidos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pedido)
+    })
+    if (response.ok) {
+      alert('¡Pedido guardado!')
+      // Aquí puedes vaciar el carrito si quieres
+    } else {
+      alert('Error al guardar el pedido')
+    }
+  } catch (error) {
+    alert('Error de conexión con el servidor')
+  }
+}
+
 
 </script>
 
@@ -82,5 +120,21 @@ ul {
 p {
   font-size: 18px;
 }
+
+.volver-home {
+  margin: 16px;
+  padding: 8px 20px;
+  font-size: 16px;
+  background: #FFD600;
+  border: 2px solid #333;
+  border-radius: 5px;
+  font-weight: bold; 
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.volver-home:hover {
+  background: #FFEA70;
+}
+
 
 </style>

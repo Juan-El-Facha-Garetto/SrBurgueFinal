@@ -18,7 +18,7 @@
           <td>{{ producto.Nombre }}</td>
           <td>{{ producto.Descripcion }}</td>
           <td>${{ producto.Precio }}</td>
-          <td>{{ producto.CategoriaSeccion }} - {{ producto.CategoriaDetalle }}</td> <!-- Mostrar categoría -->
+          <td>{{ producto.CategoriaSeccion }} </td> <!-- Mostrar categoría -->
           <td>
             <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" alt="Foto" width="60" />
           </td>
