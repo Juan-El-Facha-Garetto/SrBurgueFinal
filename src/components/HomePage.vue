@@ -20,7 +20,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import CarritoNew from './CarritoNew.vue'
 
-const categorias = ref([]) // <--- nombre correcto
+const categorias = ref([]) 
 const cart = ref([])
 const router = useRouter()
 

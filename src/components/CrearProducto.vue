@@ -38,6 +38,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+import { authFetch } from '@/helpers/authFetch'
 
 const categorias = ref([])
 const product = ref({
@@ -64,14 +65,14 @@ const submitProduct = async () => {
       formData.append('Foto', product.value.Foto);
     }
 
-    await axios.post('http://localhost:3000/api/productos', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+   const response = await authFetch('http://localhost:3000/api/productos', {
+      method: 'POST',
+      body: formData
     });
+
+    if (!response.ok) throw new Error('Error al crear producto');
     alert('Producto creado con éxito');
-    router.push('/admin') // O la ruta de tu lobby/lista de productos
-    // Opcional: limpiar el formulario o redirigir
+    router.push('/admin');
   } catch (error) {
     alert('Error al crear producto');
     console.error(error);

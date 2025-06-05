@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+ 
+
 import HomeView from '../views/HomeView.vue'
 import LoginComponent from '@/components/LoginComponent.vue'
 import AdminPanel from '@/components/AdminPanel.vue'
@@ -44,7 +46,8 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    component: AdminPanel
+    component: AdminPanel,
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/Lista-Clientes',
@@ -72,5 +75,19 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = !!localStorage.getItem('user') // O usa Vuex/pinia
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    return next({ name: 'login' })
+  }
+  if (to.meta.requiresAdmin && user.rol !== 'admin') {
+    return next({ name: 'home' }) 
+  }
+  next()
+})
+
 
 export default router

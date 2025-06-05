@@ -32,6 +32,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import {  useRouter } from 'vue-router'
+import { authFetch } from '@/helpers/authFetch';
 
 const clientes = ref([]);
 const router = useRouter();
@@ -39,7 +40,7 @@ const router = useRouter();
 // Cargar clientes desde el backend al montar el componente
 onMounted(async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/personas/all')
+    const response = await authFetch('http://localhost:3000/api/personas/all')
     if (response.ok) {
       const data = await response.json()
       console.log('Clientes cargados:',data);

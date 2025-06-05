@@ -1,4 +1,5 @@
 import { mssql, getConnection } from '../conexion.js';
+import { generarToken } from '../utils/jwt.js';
 
 export const agregarUsuario = async (req, res) => {
   try {
@@ -40,14 +41,23 @@ export const loginUsuario = async (req, res) => {
       return res.status(401).json({ message: 'Contraseña incorrecta.' });
     }
 
-    // Diferenciar por rol
-    if (user.ID_Rol === 1) {
-      return res.json({ message: 'Login exitoso', rol: 'admin', idUsuario: user.ID });
-    } else if (user.ID_Rol === 2) {
-      return res.json({ message: 'Login exitoso', rol: 'usuario', idUsuario: user.ID });
-    } else {
-      return res.status(403).json({ message: 'Rol no permitido.' });
-    }
+     const rol = user.ID_Rol === 1 ? 'admin' : 'usuario';
+
+    // Genera el token
+    const token = generarToken({
+      ID: user.ID,
+      rol,
+      Usuario: user.Usuario
+    });
+
+    // Devuelve datos y token
+    res.json({
+      id: user.ID,
+      usuario: user.Usuario,
+      rol,
+      token
+    });
+    
   } catch (error) {
     console.error('Error en login:', error);
     res.status(500).json({ message: 'Error en el servidor', error: error.message });

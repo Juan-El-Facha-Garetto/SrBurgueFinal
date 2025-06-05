@@ -18,7 +18,7 @@
           <td>{{ producto.Nombre }}</td>
           <td>{{ producto.Descripcion }}</td>
           <td>${{ producto.Precio }}</td>
-          <td>{{ producto.CategoriaSeccion }} - {{ producto.CategoriaDetalle }}</td> <!-- Mostrar categoría -->
+          <td>{{ producto.CategoriaSeccion }}</td> 
           <td>
             <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" alt="Foto" width="60" />
           </td>
@@ -36,6 +36,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { authFetch } from '@/helpers/authFetch'
 
 const router = useRouter()
 const productos = ref([])
@@ -58,7 +59,9 @@ const editarProducto = (id) => {
 const eliminarProducto = async (id) => {
   if (confirm('¿Seguro que deseas eliminar este producto?')) {
     try {
-      await axios.delete(`http://localhost:3000/api/productos/${id}`);
+     await authFetch(`http://localhost:3000/api/productos/${id}`, {
+        method: 'DELETE'
+      });
       productos.value = productos.value.filter(producto => producto.ID !== id);
       alert('Producto eliminado con éxito');
     } catch (error) {

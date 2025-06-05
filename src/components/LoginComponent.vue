@@ -21,29 +21,38 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const username = ref('')
 const password = ref('')
 const errorMessage = ref(null)
 const router = useRouter()
+const userStore = useUserStore()
+
 
 const login = async () => {
   errorMessage.value = null;
   try {
     const response = await fetch('http://localhost:3000/api/usuarios/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+       },
       body: JSON.stringify({
         Usuario: username.value,
         ClaveIngreso: password.value
       })
     });
+
     const data = await response.json();
 
     if (!response.ok) {
       errorMessage.value = data.message;
       return;
     }
+
+    userStore.login(data)
+    localStorage.setItem('user', JSON.stringify(data))
+    localStorage.setItem('token', data.token)
 
     // Redirección según el rol
     if (data.rol === 'admin') {

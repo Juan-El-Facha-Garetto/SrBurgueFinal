@@ -29,43 +29,48 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { authFetch } from '@/helpers/authFetch'
 
 const route = useRoute()
 const clienteId = route.params.id
 
 const cliente = ref({
-  id: '',
   nombre: '',
   apellido: '',
   telefono: '',
   direccion: '',
-  email: '',
+  email: ''
 })
 
-// Lista de clientes simulada
-const clientes = [
-  { id: '1', nombre: 'Juan', apellido: 'Pérez', telefono: '123456789', direccion: 'Calle Falsa 123', email: 'juan.perez@example.com' },
-  { id: '2', nombre: 'María', apellido: 'Gómez', telefono: '987654321', direccion: 'Avenida Siempre Viva 456', email: 'maria.gomez@example.com' },
-  { id: '3', nombre: 'Carlos', apellido: 'López', telefono: '555555555', direccion: 'Boulevard Principal 789', email:  'carlos.perez@example.com'}
-]
-
 // Función para cargar los datos del cliente
-const loadCliente = () => {
-  const existingCliente = clientes.find((c) => c.id === clienteId)
-  if (existingCliente) {
-    cliente.value = { ...existingCliente }
-  } else {
-    alert('Cliente no encontrado')
+const loadCliente = async () => {
+  try {
+    const response = await authFetch(`http://localhost:3000/api/personas/${clienteId}`);
+    if (!response.ok) throw new Error('No se pudo cargar el cliente');
+    const data = await response.json();
+    cliente.value = data;
+  } catch (error) {
+    alert('Cliente no encontrado');
+    console.error(error);
   }
 }
 
 // Función para enviar los datos del cliente editado
-const submitCliente = () => {
-  console.log('Cliente Editado:', cliente.value)
-  alert('Cliente editado con éxito')
-  // Aquí puedes agregar la lógica para enviar los datos al backend
+const submitCliente = async () => {
+  try {
+    const response = await authFetch(`http://localhost:3000/api/personas/${clienteId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cliente.value)
+    });
+    if (!response.ok) throw new Error('Error al editar cliente');
+    alert('Cliente editado con éxito');
+  } catch (error) {
+    alert('Error al editar cliente');
+    console.error(error);
+  }
 }
 
 // Cargar los datos del cliente al montar el componente

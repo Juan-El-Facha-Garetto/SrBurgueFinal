@@ -40,6 +40,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
+import { authFetch } from '@/helpers/authFetch'
 
 const route = useRoute()
 const router = useRouter()
@@ -83,9 +84,11 @@ const submitProduct = async () => {
       formData.append('Foto', product.value.Foto)
     }
 
-    await axios.put(`http://localhost:3000/api/productos/${productId}`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+   const response = await authFetch(`http://localhost:3000/api/productos/${productId}`, {
+      method: 'PUT',
+      body: formData
     })
+    if (!response.ok) throw new Error('Error al editar producto')
     alert('Producto editado con éxito')
     router.push('/admin')
   } catch (error) {
