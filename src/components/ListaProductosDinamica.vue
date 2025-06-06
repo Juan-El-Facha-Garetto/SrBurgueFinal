@@ -1,14 +1,12 @@
 <template>
 
+  <VolverHome @ir-al-home="irAlHome" />
+
    <!-- Ícono flotante del carrito que navega a la página del carrito -->
     <router-link to="/carrito" class="carrito-flotante-link">
       <CarritoIcon :totalItems="totalItems" />
     </router-link>
-    
-    <button @click="irAlHome" class="volver-home">
-      Volver al Home
-    </button>
-
+  
   <div>
     <h2 v-if="productos.length">Productos de {{ productos[0].CategoriaSeccion }}</h2>
     <h2 v-else>Productos</h2>
@@ -31,7 +29,7 @@
 import { ref, onMounted, watch, inject, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CarritoIcon from './CarritoIcon.vue'
-
+import VolverHome from './VolverHome.vue'
 const productos = ref([])
 const route = useRoute()
 const router = useRouter() 

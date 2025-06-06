@@ -1,8 +1,6 @@
 <template>
 
-    <button @click="irAlHome" class="volver-home">
-      Volver al Home
-    </button>
+    <VolverHome @volver-home="irAlHome" />
 
     <div class="cart">
 
@@ -24,7 +22,7 @@
          <!-- Vaciar Carrito Completo -->
          <button v-if="cart.length >0"  @click="confirmRemoveCart">🧹 Vaciar carrito</button>
           <!-- Total del carrito -->
-         <p v-if="cart.length > 0">Total: ${{ totalPrice }}</p>
+         <p v-if="cart.length > 0">Total: ${{ totalPrice }}</p> 
 
     </div>
     <button v-if="cart.length > 0" @click="confirmarCompra">Confirmar compra</button>
@@ -32,7 +30,7 @@
 
 <script setup>
 import { computed,defineProps,defineEmits } from 'vue'
-
+import VolverHome from './VolverHome.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const irAlHome = () => {
