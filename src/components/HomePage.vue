@@ -10,19 +10,22 @@
         {{ cat.Seccion }} 
       </button>
     </div>
-    <router-view />
-    <CarritoNew :cart="cart" @remove-from-cart="handleRemoveFromCart" @clear-cart="cart = []"/>
+    <CarritoIcon :totalItems="totalItems" @abrir-carrito="irAlCarrito" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import CarritoNew from './CarritoNew.vue'
+import CarritoIcon from './CarritoIcon.vue'
+import { useCartStore } from '@/stores/cart'
+
 
 const categorias = ref([]) 
-const cart = ref([])
 const router = useRouter()
+const cartStore = useCartStore()
+
+const totalItems = computed(() => cartStore.items.reduce((sum, item) => sum + item.quantity, 0))
 
 onMounted(async () => {
   const response = await fetch('http://localhost:3000/api/categorias')
@@ -34,12 +37,11 @@ onMounted(async () => {
 })
 
 function irAProductos(idCategoria) {
-  console.log('Navegando a productos de categoría:', idCategoria)
   router.push({ name: 'productos-categoria', params: { categoria: idCategoria } })
 }
 
-function handleRemoveFromCart(id) {
-  cart.value = cart.value.filter(item => item.id !== id)
+function irAlCarrito() {
+  router.push('/carrito')
 }
 </script>
 

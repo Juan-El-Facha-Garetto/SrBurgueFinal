@@ -1,16 +1,14 @@
 <template>
-
+  <VolverHomeButton @click="irAlHome" />
     <div class="cart">
-
         <h2>🛒 Carrito({{ totalItems }})</h2>
-
         <ul>
             <li v-for="item in cart" :key="item.id">
             <h3>{{ item.name }} (x{{ item.quantity }})</h3>
             <p>Precio unitario: ${{ item.price }}</p>
             <p>Subtotal: ${{ item.price * item.quantity }}</p>
             <button @click="removeItem(item.id)">❌ Eliminar</button>
-            <img :src="`/img/${item.image}`" :alt="item.name" width="50" />
+            <img :src="`http://localhost:3000/uploads/${item.image}`" :alt="item.name" width="50" />
             </li>
         </ul>
 
@@ -20,7 +18,7 @@
          <!-- Vaciar Carrito Completo -->
          <button v-if="cart.length >0"  @click="confirmRemoveCart">🧹 Vaciar carrito</button>
           <!-- Total del carrito -->
-         <p v-if="cart.length > 0">Total: ${{ totalPrice }}</p>
+         <button v-if="cart.length > 0" @click="confirmarCompra">Confirmar compra</button>
 
     </div>
 
@@ -28,6 +26,8 @@
 
 <script setup>
 import { computed,defineProps,defineEmits } from 'vue'
+import VolverHomeButton from './VolverHomeButton.vue';
+
 
 const confirmRemoveCart = () =>{
   if(confirm('¿Estás seguro de que deseas eliminar este producto del carrito?😭')){
@@ -65,6 +65,31 @@ const totalItems = computed(() => {
   return props.cart.reduce((sum, item) =>  sum + item.quantity, 0)
 })
 
+const confirmarCompra = async () => {
+  // Arma el objeto pedido
+  const pedido = {
+    ID_Usuario: 1, // Cambia por el usuario real si tienes login
+    ID_MetodosDePago: 1, // Cambia por el método real si tienes selector
+    Total: totalPrice.value // Usa el total calculado del carrito
+    // Si solo quieres guardar esto, no envíes los productos
+  }
+
+  try {
+    const response = await fetch('http://localhost:3000/api/pedidos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pedido)
+    })
+    if (response.ok) {
+      alert('¡Pedido guardado!')
+      // Aquí puedes vaciar el carrito si quieres
+    } else {
+      alert('Error al guardar el pedido')
+    }
+  } catch (error) {
+    alert('Error de conexión con el servidor')
+  }
+}
 
 </script>
 

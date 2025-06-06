@@ -1,4 +1,9 @@
 <template>
+   <!-- Ícono flotante del carrito que navega a la página del carrito -->
+    <router-link to="/carrito" class="carrito-flotante-link">
+      <CarritoIcon :totalItems="totalItems" />
+    </router-link>
+    <VolverHomeButton />
   <div>
    <h2 v-if="productos.length">Productos de {{ productos[0].CategoriaSeccion }}</h2>
     <h2 v-else>Productos</h2>
@@ -8,6 +13,7 @@
         <h3>{{ producto.Nombre }}</h3>
         <p>{{ producto.Descripcion }}</p>
         <p>Precio: ${{ producto.Precio }}</p>
+        <button @click="addToCart(producto)">Agregar al carrito</button>
       </li>
     </ul>
     <p v-else>No hay productos en esta categoría.</p>
@@ -15,11 +21,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
+import CarritoIcon from './CarritoIcon.vue'
+import VolverHomeButton from './VolverHomeButton.vue'
 
 const productos = ref([])
 const route = useRoute()
+const addToCart = inject('addToCart')
+const cart = inject('cart')
 const categoria = ref(route.params.categoria)
 console.log('Categoría actual:', categoria.value)
 
@@ -42,6 +52,8 @@ watch(() => route.params.categoria, (newCat) => {
   console.log('Categoría actualizada:', categoria.value)
   cargarProductos()
 })
+
+const totalItems = computed(() => cart.value.reduce((sum, item) => sum + item.quantity, 0))
 </script>
 
 

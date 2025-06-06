@@ -7,7 +7,7 @@
         <select id="categoria" v-model="product.ID_Categoria" required>
           <option value="" disabled>Seleccione una categoría</option>
           <option v-for="cat in categorias" :key="cat.ID" :value="cat.ID">
-            {{ cat.Seccion }} - {{ cat.Detalle }}
+            {{ cat.Seccion }}
           </option>
         </select>
       </div>
