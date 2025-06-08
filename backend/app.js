@@ -7,6 +7,8 @@ import personaRoutes from './routes/personaRoutes.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import pedidoRoutes from './routes/pedidoRoutes.js';
+import metodosdepagoRoutes from './routes/metodosdepagoRoutes.js';
+import transferenciasRoutes from './routes/transferenciasRoutes.js';
 
 
 
@@ -24,7 +26,8 @@ app.use('/all', personaRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/admin', adminRoutes);
-
+app.use('/api/metodosdepago', metodosdepagoRoutes);
+app.use('/api/transferencias', transferenciasRoutes);
 // Servir archivos estáticos
 app.use('/uploads', express.static('uploads'));
 

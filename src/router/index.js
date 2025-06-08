@@ -73,7 +73,12 @@ const routes = [
     path: '/usuario',
     name: 'usuario',
     component: UsuarioComponent
-  }
+  },
+  {
+  path: '/resumen-pedido/:id/:metodo',
+  name: 'resumen-pedido',
+  component: () => import('@/components/ResumenPedido.vue')
+}
 ]
 
 const router = createRouter({

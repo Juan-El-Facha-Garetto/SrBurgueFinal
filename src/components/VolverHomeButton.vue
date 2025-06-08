@@ -1,5 +1,5 @@
 <template>
-  <button @click="irAlHome" class="volver-home">Volver al Home</button>
+  <button @click="irAlHome" class="volver-home">Volver</button>
 </template>
 
 <script setup>

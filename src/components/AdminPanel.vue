@@ -15,12 +15,17 @@
         <li>
           <a href="#" @click.prevent="mostrarComponente('Categorias')">Categorias</a>
         </li>
+        <li>
+          <a href="#" @click.prevent="mostrarComponente('transferencias')">Transferencias</a>
+        </li>
       </ul>
     </nav>
     <div class="admin-dynamic-content">
       <!-- Renderizado dinámico del componente -->
       <ListaProductos v-if="componenteActual === 'productos'" />
       <ListaClientes v-if="componenteActual === 'clientes'" />
+      <AdminTransferencias v-if="componenteActual === 'transferencias'" />
+      <!-- Puedes agregar aquí el componente de Categorias si lo tienes -->
     </div>
     <button class="volver-login" @click="volverAlLogin">Volver al Login</button>
   </div>
@@ -30,6 +35,7 @@
 import { ref } from 'vue';
 import ListaProductos from './ListaProductos.vue';
 import ListaClientes from './ListaClientes.vue';
+import AdminTransferencias from './AdminTransferencias.vue';
 
 const componenteActual = ref('productos'); // Componente por defecto
 
@@ -40,7 +46,6 @@ const mostrarComponente = (componente) => {
 const volverAlLogin = () => {
   window.location.href = '/'; // Redirigir al login
 };
-
 </script>
 
 <style scoped>

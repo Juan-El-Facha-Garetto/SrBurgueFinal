@@ -1,77 +1,101 @@
 <template>
   <VolverHomeButton @click="irAlHome" />
-    <div class="cart">
-        <h2>🛒 Carrito({{ totalItems }})</h2>
-        <ul>
-            <li v-for="item in cart" :key="item.id">
-            <h3>{{ item.name }} (x{{ item.quantity }})</h3>
-            <p>Precio unitario: ${{ item.price }}</p>
-            <p>Subtotal: ${{ item.price * item.quantity }}</p>
-            <button @click="removeItem(item.id)">❌ Eliminar</button>
-            <img :src="`http://localhost:3000/uploads/${item.image}`" :alt="item.name" width="50" />
-            </li>
-        </ul>
+  <div class="cart">
+    <h2>🛒 Carrito({{ totalItems }})</h2>
+    <ul>
+      <li v-for="item in cart" :key="item.id">
+        <h3>{{ item.name }} (x{{ item.quantity }})</h3>
+        <p>Precio unitario: ${{ item.price }}</p>
+        <p>Subtotal: ${{ item.price * item.quantity }}</p>
+        <button @click="removeItem(item.id)">❌ Eliminar</button>
+        <img :src="`http://localhost:3000/uploads/${item.image}`" :alt="item.name" width="50" />
+      </li>
+    </ul>
+    <p v-if="cart.length === 0">El carrito está vacío</p>
+    <button v-if="cart.length > 0" @click="confirmRemoveCart">🧹 Vaciar carrito</button>
+    <p v-if="cart.length > 0"><strong>Total: ${{ totalPrice }}</strong></p>
+  </div>
 
-        <!-- Si el carrito está vacío, mostrar un mensaje -->
-         <p v-if="cart.length ===0">El carrito está vacío</p>
+  <div v-if="cart.length > 0" class="metodos-pago">
+    <label>Método de pago:</label>
+    <button
+      :class="{ seleccionado: metodoSeleccionado === 'Efectivo' }"
+      @click="seleccionarMetodo('Efectivo')"
+      type="button"
+    >
+      Efectivo
+    </button>
+    <button
+      :class="{ seleccionado: metodoSeleccionado === 'Transferencia' }"
+      @click="seleccionarMetodo('Transferencia')"
+      type="button"
+    >
+      Transferencia
+    </button>
+  </div>
 
-         <!-- Vaciar Carrito Completo -->
-         <button v-if="cart.length >0"  @click="confirmRemoveCart">🧹 Vaciar carrito</button>
-          <!-- Total del carrito -->
-         <button v-if="cart.length > 0" @click="confirmarCompra">Confirmar compra</button>
+ 
+  <button v-if="cart.length > 0" @click="confirmarCompra">Confirmar compra</button>
 
-    </div>
 
 </template>
 
 <script setup>
-import { computed,defineProps,defineEmits } from 'vue'
-import VolverHomeButton from './VolverHomeButton.vue';
+import { ref, computed, defineProps, defineEmits} from 'vue'
+import VolverHomeButton from './VolverHomeButton.vue'
+import { useRouter } from 'vue-router'
 
 
-const confirmRemoveCart = () =>{
-  if(confirm('¿Estás seguro de que deseas eliminar este producto del carrito?😭')){
+const router = useRouter()
+
+const emit = defineEmits(['remove-from-cart', 'clear-cart'])
+const props = defineProps({
+  cart: {
+    type: Array,
+    required: true
+  }
+})
+
+const metodoSeleccionado = ref('');
+const seleccionarMetodo = (metodo) => {
+  metodoSeleccionado.value = metodo;
+};
+
+const confirmRemoveCart = () => {
+  if (confirm('¿Estás seguro de que deseas eliminar este producto del carrito?😭')) {
     emit('clear-cart')
-}
+  }
 }
 
-
-// Función para eliminar un producto del carrito
-const emit = defineEmits(['remove-from-cart'])
 const removeItem = (id) => {
   if (confirm('¿Estás seguro de que deseas eliminar este producto del carrito?😭')) {
-    // Si el usuario confirma, emitimos el evento para eliminar el producto
-    emit('remove-from-cart', id)}
+    emit('remove-from-cart', id)
+  }
 }
 
-//Propiedad que recibe el carrito desde el componente padre (HomePage)
-const props = defineProps({
-    cart: {
-        type: Array,
-        required: true
-    }
-})
-// Calcular el total del carrito
 const totalPrice = computed(() => {
   return props.cart.reduce((sum, item) => {
-    const price = Number(item.price) || 0; // Convierte a número y asigna 0 si no es válido
-    const quantity = Number(item.quantity) || 0; // Lo mismo para la cantidad
-    return sum + (price * quantity)
+    const price = Number(item.price) || 0
+    const quantity = Number(item.quantity) || 0
+    return sum + price * quantity
   }, 0)
 })
 
-// Calcular el total de items en el carrito
-const totalItems = computed(() => {
-  return props.cart.reduce((sum, item) =>  sum + item.quantity, 0)
-})
-
 const confirmarCompra = async () => {
-  // Arma el objeto pedido
+  if (!metodoSeleccionado.value) {
+    alert('Selecciona un método de pago')
+    return
+  }
+  const ID_MetodosDePago = metodoSeleccionado.value === 'Efectivo' ? 1 : 2
+
+  // Obtiene el usuario logueado
+  const usuario = JSON.parse(localStorage.getItem('user') || '{}')
+  const ID_Usuario = usuario.id
+
   const pedido = {
-    ID_Usuario: 1, // Cambia por el usuario real si tienes login
-    ID_MetodosDePago: 1, // Cambia por el método real si tienes selector
-    Total: totalPrice.value // Usa el total calculado del carrito
-    // Si solo quieres guardar esto, no envíes los productos
+    ID_Usuario,
+    ID_MetodosDePago,
+    Total: totalPrice.value
   }
 
   try {
@@ -81,8 +105,32 @@ const confirmarCompra = async () => {
       body: JSON.stringify(pedido)
     })
     if (response.ok) {
-      alert('¡Pedido guardado!')
-      // Aquí puedes vaciar el carrito si quieres
+      const data = await response.json();
+      const pedidoId = data.id;
+
+      // Guarda cada producto del carrito en DetallePedido
+      for (const item of props.cart) {
+        await fetch('http://localhost:3000/api/pedidos/detallepedido', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ID_Pedido: pedidoId,
+            ID_Producto: item.id,
+            Cantidad: item.quantity,
+            PrecioUnitario: item.price,
+            Subtotal: item.price * item.quantity,
+            Observaciones: item.observaciones || ''
+          })
+        });
+      }
+
+      router.push({
+        name: 'resumen-pedido',
+        params: {
+          id: pedidoId,
+          metodo: ID_MetodosDePago
+        }
+      });
     } else {
       alert('Error al guardar el pedido')
     }
@@ -90,22 +138,31 @@ const confirmarCompra = async () => {
     alert('Error de conexión con el servidor')
   }
 }
-
 </script>
 
 <style scoped>
-
-.cart {
-  border-top: 2px solid #ccc;
-  padding-top: 20px;
+.metodos-pago button {
+  margin: 0 10px;
+  padding: 8px 16px;
+  border: 2px solid #FFD600;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.metodos-pago button.seleccionado {
+  background: #FFD600;
+  color: #222;
+  font-weight: bold;
+}
+.tabla-transferencia {
   margin-top: 20px;
 }
-ul {
-  list-style-type: none;
-  padding-left: 0;
+.tabla-transferencia table {
+  width: 100%;
+  border-collapse: collapse;
 }
-p {
-  font-size: 18px;
+.tabla-transferencia th, .tabla-transferencia td {
+  border: 1px solid #ccc;
+  padding: 8px;
 }
-
 </style>
