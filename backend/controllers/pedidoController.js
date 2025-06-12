@@ -48,6 +48,7 @@ export const getDetallePedido = async (req, res) => {
 };
 
 export const crearDetallePedido = async (req, res) => {
+  console.log('Recibido en backend:', req.body); // <-- agrega esto
   const { ID_Pedido, ID_Producto, Cantidad, PrecioUnitario, Subtotal, Observaciones } = req.body;
   try {
     const pool = await getConnection();
@@ -65,5 +66,32 @@ export const crearDetallePedido = async (req, res) => {
     res.status(201).json({ message: 'Detalle de pedido guardado' });
   } catch (error) {
     res.status(500).json({ error: 'Error al guardar el detalle de pedido' });
+  }
+};
+
+// Detalles de pedido para administrador
+export const getTodosLosDetallesPedidos = async (req, res) => {
+  try {
+    const pool = await getConnection();
+    const result = await pool.request().query(`
+      SELECT 
+        dp.ID AS ID_Detalle,
+        dp.ID_Pedido,
+        pe.Fecha,
+        pe.Hora,
+        p.Nombre AS NombreProducto,
+        dp.Cantidad,
+        dp.PrecioUnitario,
+        dp.Subtotal,
+        dp.Observaciones
+      FROM DetallePedido dp
+      JOIN Pedido pe ON dp.ID_Pedido = pe.ID
+      JOIN Producto p ON dp.ID_Producto = p.ID
+      ORDER BY pe.Fecha DESC, pe.Hora DESC, dp.ID_Pedido DESC
+    `);
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error al obtener todos los detalles de pedidos:', error);
+    res.status(500).json({ error: 'Error al obtener los detalles de pedidos' });
   }
 };

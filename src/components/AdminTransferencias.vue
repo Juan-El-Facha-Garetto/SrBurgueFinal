@@ -1,4 +1,3 @@
-<!-- filepath: src/components/AdminTransferencias.vue -->
 <template>
   <div>
     <h2>Cuentas para Transferencia</h2>
@@ -9,6 +8,7 @@
           <th>Cuit</th>
           <th>Nombre y Apellido</th>
           <th>Entidad</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -17,16 +17,21 @@
           <td>{{ cuenta.Cuit }}</td>
           <td>{{ cuenta.NombreYApellido }}</td>
           <td>{{ cuenta.Entidad }}</td>
+          <td>
+            <button @click="editarCuenta(cuenta)">Editar</button>
+            <button @click="eliminarCuenta(cuenta.ID)">Eliminar</button>
+          </td>
         </tr>
       </tbody>
     </table>
-    <h3>Agregar nueva cuenta</h3>
-    <form @submit.prevent="agregarCuenta">
+    <h3>{{ editando ? 'Editar cuenta' : 'Agregar nueva cuenta' }}</h3>
+    <form @submit.prevent="editando ? guardarEdicion() : agregarCuenta()">
       <input v-model="nueva.Alias" placeholder="Alias" required />
       <input v-model="nueva.Cuit" placeholder="Cuit" required />
       <input v-model="nueva.NombreYApellido" placeholder="Nombre y Apellido" required />
       <input v-model="nueva.Entidad" placeholder="Entidad" required />
-      <button type="submit">Agregar</button>
+      <button type="submit">{{ editando ? 'Guardar' : 'Agregar' }}</button>
+      <button v-if="editando" type="button" @click="cancelarEdicion">Cancelar</button>
     </form>
   </div>
 </template>
@@ -36,6 +41,8 @@ import { ref, onMounted } from 'vue';
 
 const cuentas = ref([]);
 const nueva = ref({ Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' });
+const editando = ref(false);
+const editId = ref(null);
 
 const cargarCuentas = async () => {
   const res = await fetch('http://localhost:3000/api/transferencias');
@@ -49,6 +56,37 @@ const agregarCuenta = async () => {
     body: JSON.stringify(nueva.value)
   });
   nueva.value = { Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' };
+  cargarCuentas();
+};
+
+const editarCuenta = (cuenta) => {
+  nueva.value = { ...cuenta };
+  editando.value = true;
+  editId.value = cuenta.ID;
+};
+
+const guardarEdicion = async () => {
+  await fetch(`http://localhost:3000/api/transferencias/${editId.value}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(nueva.value)
+  });
+  nueva.value = { Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' };
+  editando.value = false;
+  editId.value = null;
+  cargarCuentas();
+};
+
+const cancelarEdicion = () => {
+  nueva.value = { Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' };
+  editando.value = false;
+  editId.value = null;
+};
+
+const eliminarCuenta = async (id) => {
+  await fetch(`http://localhost:3000/api/transferencias/${id}`, {
+    method: 'DELETE'
+  });
   cargarCuentas();
 };
 

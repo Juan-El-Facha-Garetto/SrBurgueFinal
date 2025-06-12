@@ -5,8 +5,15 @@
     <ul>
       <li v-for="item in cart" :key="item.id">
         <h3>{{ item.name }} (x{{ item.quantity }})</h3>
+        <p>Descripcion: {{ item.description }}</p>
         <p>Precio unitario: ${{ item.price }}</p>
         <p>Subtotal: ${{ item.price * item.quantity }}</p>
+         <input
+            v-if="item.CategoriaSeccion !== 'Bebida'"
+            v-model="item.observaciones"
+            placeholder="Ej: Sin Mayonesa"
+          />
+
         <button @click="removeItem(item.id)">❌ Eliminar</button>
         <img :src="`http://localhost:3000/uploads/${item.image}`" :alt="item.name" width="50" />
       </li>
@@ -47,7 +54,6 @@ import { useRouter } from 'vue-router'
 
 
 const router = useRouter()
-
 const emit = defineEmits(['remove-from-cart', 'clear-cart'])
 const props = defineProps({
   cart: {

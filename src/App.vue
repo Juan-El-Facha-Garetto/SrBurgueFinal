@@ -16,8 +16,10 @@ function addToCart(producto, cantidad = 1) {
     cart.value.push({
       id: producto.ID,
       name: producto.Nombre,
+      description: producto.Descripcion,
       price: producto.Precio,
       quantity: cantidad,
+      CategoriaSeccion: producto.CategoriaSeccion,
       image: producto.Foto
     })
   }

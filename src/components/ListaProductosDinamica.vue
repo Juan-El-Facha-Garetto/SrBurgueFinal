@@ -13,7 +13,10 @@
         <h3>{{ producto.Nombre }}</h3>
         <p>{{ producto.Descripcion }}</p>
         <p>Precio: ${{ producto.Precio }}</p>
-        <button @click="addToCart(producto)">Agregar al carrito</button>
+
+        <input type="number" min="1" v-model.number="cantidades[producto.ID]" style="width: 60px; margin-right: 8px;"/>
+
+        <button @click="agregar(producto)">Agregar al carrito</button>
       </li>
     </ul>
     <p v-else>No hay productos en esta categoría.</p>
@@ -32,6 +35,14 @@ const addToCart = inject('addToCart')
 const cart = inject('cart')
 const categoria = ref(route.params.categoria)
 console.log('Categoría actual:', categoria.value)
+const cantidades = ref({}) // NUEVO
+
+const agregar = (producto) => {
+  const cantidad = cantidades.value[producto.ID] || 1
+  addToCart(producto, cantidad)
+  cantidades.value[producto.ID] = 1 // Opcional: reinicia el input
+}
+
 
 async function cargarProductos() {
   const response = await fetch(`http://localhost:3000/api/productos/filtrados?idCategoria=${categoria.value}`)
