@@ -25,8 +25,8 @@ function addToCart(producto, cantidad = 1) {
   }
 }
 
-function handleRemoveFromCart(id) {
-  cart.value = cart.value.filter(item => item.id !== id)
+function handleRemoveFromCart(idx) {
+  cart.value.splice(idx, 1)
 }
 
 function handleClearCart() {

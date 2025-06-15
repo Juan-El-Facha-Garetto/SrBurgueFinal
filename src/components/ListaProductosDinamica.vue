@@ -22,6 +22,9 @@
     </ul>
     <p v-else>No hay productos en esta categoría.</p>
   </div>
+
+  <CarritoNew :cart="cart" @remove-from-cart="handleRemoveFromCart" @clear-cart="handleClearCart" />
+
 </template>
 
 <script setup>
@@ -59,7 +62,6 @@ const agregar = (producto) => {
   mensaje.value = `¡${cantidad} ${producto.Nombre}${cantidad > 1 ? 's' : ''} agregado${cantidad > 1 ? 's' : ''} al carrito!`
   setTimeout(() => mensaje.value = '', 1800)
 }
-
 
 async function cargarProductos() {
   const response = await fetch(`http://localhost:3000/api/productos/filtrados?idCategoria=${categoria.value}`)

@@ -79,9 +79,9 @@ const confirmRemoveCart = () => {
   }
 }
 
-const removeItem = (id) => {
+const removeItem = (idx) => {
   if (confirm('¿Estás seguro de que deseas eliminar este producto del carrito?😭')) {
-    emit('remove-from-cart', id)
+    emit('remove-from-cart', idx)
   }
 }
 
