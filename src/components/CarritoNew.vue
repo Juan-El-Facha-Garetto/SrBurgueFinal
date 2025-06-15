@@ -1,7 +1,7 @@
 <template>
   <VolverHomeButton @click="irAlHome" />
   <div class="cart">
-    <h2>🛒 Carrito({{ totalItems }})</h2>
+    <h2>🛒 Carrito de compras</h2>
     <ul>
       <li v-for="item in cart" :key="item.id">
         <h3>{{ item.name }} (x{{ item.quantity }})</h3>

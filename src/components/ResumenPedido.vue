@@ -156,7 +156,7 @@ const enviarPorWhatsapp = () => {
     mensaje += `\n*SUBIR COMPROBANTE EN ESTE CHAT.*\n`;}
 
   mensaje += `\n_*Total: $${total.value}*_`;
-  const telefono = '3564228826'; // <-- tu número aquí
+  const telefono = '3564211950'; // <-- tu número aquí
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
 };
