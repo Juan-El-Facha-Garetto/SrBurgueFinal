@@ -115,7 +115,6 @@ const formaEntrega = ref('retiro');
 const direccionEntrega = ref('');
 const nombreEntrega = ref('');
 const ciudad = ref('');
-const Observaciones = ref('');
 const errorEnvio = ref('');
 
 const volverAlCarrito = () => {
@@ -126,24 +125,23 @@ const volverAlCarrito = () => {
 const enviarPorWhatsapp = () => {
 
   errorEnvio.value = '';
-  let mensaje = `*SR BURGUERS*\n Pedido #${pedidoId}\n`;
+  let mensaje = `*SR BURGUERS*\n\n*Pedido* #${pedidoId}\n`;
 
   mensaje += `*Forma de entrega:* ${formaEntrega.value === 'retiro' ? 'Retiro en sucursal' : 'Envío'}\n`;
   mensaje += `*A nombre de:* ${nombreEntrega.value}\n`; // SIEMPRE
   if (formaEntrega.value === 'envio') {
-    mensaje += `Dirección de entrega: ${direccionEntrega.value}\n`;
-    mensaje += `Ciudad: ${ciudad.value}\n`;
+    mensaje += `*Dirección de entrega*: ${direccionEntrega.value}\n`;
+    mensaje += `*Ciudad:* ${ciudad.value}\n\n`;
   }
-  mensaje += `*Observaciones:* ${Observaciones.value}\n`; // SIEMPRE
-  mensaje += `*Método de pago:* ${metodo === 1 ? 'Efectivo' : 'Transferencia'}\n\n`;
+  mensaje += `*Método de pago:* ${metodo === 1 ? 'Efectivo' : 'Transferencia'}\n`;
 
   // Agregar datos de transferencia si corresponde
   if (metodo === 2 && cuentasTransferencia.value.length > 0) {
     const cuenta = cuentasTransferencia.value[0]; // Puedes elegir la cuenta que prefieras
     mensaje += `\n*Datos para Transferencia:*\n`;
-    mensaje += `Alias:*${cuenta.Alias}*\n`;
-    mensaje += `Titular: *${cuenta.NombreYApellido}*\n`;
-    mensaje += `Banco: *${cuenta.Entidad}*\n`;
+    mensaje += `Alias: _*${cuenta.Alias}*_\n`;
+    mensaje += `Titular: _*${cuenta.NombreYApellido}*_\n`;
+    mensaje += `Banco: _*${cuenta.Entidad}*_\n\n`;
   }
 
   mensaje += `*Detalle del pedido:*\n`;
@@ -152,21 +150,26 @@ const enviarPorWhatsapp = () => {
   if (detalle.Observaciones) mensaje += ` [Obs: ${detalle.Observaciones}]`;
   mensaje += '\n';
 }); 
-  if (metodo === 2) {
-    mensaje += `\n*SUBIR COMPROBANTE EN ESTE CHAT.*\n`;}
+  
+  mensaje += `\n_*Total: $${total.value}*_\n`;
 
-  mensaje += `\n_*Total: $${total.value}*_`;
-  const telefono = '3564211950'; // <-- tu número aquí
+  if (metodo === 2) {
+    mensaje += `\n*SUBIR COMPROBANTE EN ESTE CHAT.*\n`;
+  }
+
+  const telefono = '3564659182'; // <-- tu número aquí
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
 };
 
 onMounted(async () => {
   // Trae los detalles del pedido
-  const res = await fetch(`http://localhost:3000/api/pedidos/detallepedido/${pedidoId}`);
+   const res = await fetch(`http://localhost:3000/api/pedidos/detallepedido/${pedidoId}`);
   if (res.ok) {
     detalles.value = await res.json();
-    total.value = detalles.value.reduce((sum, d) => sum + d.Subtotal, 0);
+    console.log('Detalles recibidos:', detalles.value); // AGREGA ESTA LÍNEA
+    console.log('Pedido ID:', pedidoId);
+    total.value = detalles.value.reduce((sum, d) => sum + (d.PrecioUnitario * d.Cantidad), 0);
   }
   // Trae los datos de transferencia solo si corresponde
   if (metodo === 2) {

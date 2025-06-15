@@ -13,8 +13,7 @@ export const getProductos = async (req, res) => {
                 P.Descripcion, 
                 P.Precio, 
                 P.Foto,
-                C.Seccion AS CategoriaSeccion,
-                C.Detalle AS CategoriaDetalle
+                C.Seccion AS CategoriaSeccion
             FROM Producto P
             LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
         `);
@@ -67,8 +66,7 @@ export const getProductoById = async (req, res) => {
                     P.Descripcion, 
                     P.Precio, 
                     P.Foto,
-                    C.Seccion AS CategoriaSeccion,
-                    C.Detalle AS CategoriaDetalle
+                    C.Seccion AS CategoriaSeccion
                 FROM Producto P
                 LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
                 WHERE P.ID = @ID
@@ -86,10 +84,12 @@ export const getProductoById = async (req, res) => {
 export const deleteProducto = async (req, res) => {
     try {
         const { id } = req.params;
+        console.log('Intentando eliminar producto con ID:', id); // <-- Agrega esto
         const pool = await getConnection();
-        await pool.request()
+        const result = await pool.request()
             .input('ID', id)
             .query('DELETE FROM Producto WHERE ID = @ID');
+        console.log('Filas afectadas:', result.rowsAffected); // <-- Agrega esto
         res.json({ message: 'Producto eliminado' });
     } catch (error) {
         console.error(error);
@@ -138,8 +138,7 @@ export const getProductosFiltrados = async (req, res) => {
         P.Descripcion, 
         P.Precio, 
         P.Foto,
-        C.Seccion AS CategoriaSeccion,
-        C.Detalle AS CategoriaDetalle
+        C.Seccion AS CategoriaSeccion
       FROM Producto P
       LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
     `;

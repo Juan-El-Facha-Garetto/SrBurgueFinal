@@ -6,7 +6,6 @@ import LoginComponent from '@/components/LoginComponent.vue'
 import AdminPanel from '@/components/AdminPanel.vue'
 import CrearProducto from '@/components/CrearProducto.vue'
 import EditarProducto from '@/components/EditarProducto.vue'
-import ListaClientes from '@/components/ListaClientes.vue'
 import RegisterComponent from '@/components/RegisterComponent.vue'
 import UsuarioComponent from '@/components/UsuarioComponent.vue'
 import ListaProductosDinamica from '@/components/ListaProductosDinamica.vue'
@@ -44,20 +43,10 @@ const routes = [
     component: EditarProducto
   },
   {
-    path: '/editar-cliente/:id',
-    name: 'editar-cliente',
-    component: () => import('@/components/EditarCliente.vue'),
-  },
-  {
     path: '/admin',
     name: 'admin',
     component: AdminPanel,
     meta: { requiresAuth: true, requiresAdmin: true }
-  },
-  {
-    path: '/Lista-Clientes',
-    name: 'Lista-Clientes',
-    component: ListaClientes
   },
   {
     path: '/about',

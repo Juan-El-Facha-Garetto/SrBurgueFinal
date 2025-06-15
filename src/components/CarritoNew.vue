@@ -2,25 +2,27 @@
   <VolverHomeButton @click="irAlHome" />
   <div class="cart">
     <h2>🛒 Carrito de compras</h2>
+
     <ul>
-      <li v-for="item in cart" :key="item.id">
-        <h3>{{ item.name }} (x{{ item.quantity }})</h3>
-        <p>Descripcion: {{ item.description }}</p>
-        <p>Precio unitario: ${{ item.price }}</p>
-        <p>Subtotal: ${{ item.price * item.quantity }}</p>
-         <input
+        <li v-for="(item, idx) in cart" :key="idx">
+          <h3>{{ item.name }}</h3>
+          <p>Descripcion: {{ item.description }}</p>
+          <p>Precio unitario: ${{ item.price }}</p>
+          <input
             v-if="item.CategoriaSeccion !== 'Bebida'"
             v-model="item.observaciones"
             placeholder="Ej: Sin Mayonesa"
           />
-
-        <button @click="removeItem(item.id)">❌ Eliminar</button>
-        <img :src="`http://localhost:3000/uploads/${item.image}`" :alt="item.name" width="50" />
-      </li>
+          <button @click="removeItem(idx)">❌ Eliminar</button>
+          <img :src="`http://localhost:3000/uploads/${item.image}`" :alt="item.name" width="50" />
+        </li>
     </ul>
+
     <p v-if="cart.length === 0">El carrito está vacío</p>
     <button v-if="cart.length > 0" @click="confirmRemoveCart">🧹 Vaciar carrito</button>
     <p v-if="cart.length > 0"><strong>Total: ${{ totalPrice }}</strong></p>
+    <p v-if="cart.length > 0"><strong>Total de productos: {{ cart.length }}</strong></p>
+
   </div>
 
   <div v-if="cart.length > 0" class="metodos-pago">
@@ -82,8 +84,7 @@ const removeItem = (id) => {
 const totalPrice = computed(() => {
   return props.cart.reduce((sum, item) => {
     const price = Number(item.price) || 0
-    const quantity = Number(item.quantity) || 0
-    return sum + price * quantity
+    return sum + price
   }, 0)
 })
 
@@ -122,9 +123,9 @@ const confirmarCompra = async () => {
           body: JSON.stringify({
             ID_Pedido: pedidoId,
             ID_Producto: item.id,
-            Cantidad: item.quantity,
+            Cantidad: 1,
             PrecioUnitario: item.price,
-            Subtotal: item.price * item.quantity,
+            Subtotal: item.price,
             Observaciones: item.observaciones || ''
           })
         });

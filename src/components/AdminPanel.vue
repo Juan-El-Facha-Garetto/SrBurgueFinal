@@ -13,9 +13,6 @@
           <a href="#" @click.prevent="mostrarComponente('Pedidos')">Pedidos</a>
         </li>
         <li>
-          <a href="#" @click.prevent="mostrarComponente('clientes')">Ver Clientes</a>
-        </li>
-        <li>
           <a href="#" @click.prevent="mostrarComponente('Categorias')">Categorias</a>
         </li>
         <li>
@@ -27,9 +24,8 @@
       <!-- Renderizado dinámico del componente -->
       <ListaProductos v-if="componenteActual === 'productos'" />
       <TablaDetallesPedidoAdmin v-if="componenteActual === 'Pedidos'" />
-      <ListaClientes v-if="componenteActual === 'clientes'" />
       <AdminTransferencias v-if="componenteActual === 'transferencias'" />
-      <!-- Puedes agregar aquí el componente de Categorias si lo tienes -->
+      <CategoriasDeComida v-if="componenteActual === 'Categorias'" />
     </div>
     <button class="volver-login" @click="volverAlLogin">Volver al Login</button>
   </div>
@@ -38,9 +34,9 @@
 <script setup>
 import { ref } from 'vue';
 import ListaProductos from './ListaProductos.vue';
-import ListaClientes from './ListaClientes.vue';
 import AdminTransferencias from './AdminTransferencias.vue';
 import TablaDetallesPedidoAdmin from './TablaDetallesPedidoAdmin.vue';
+import CategoriasDeComida from './CategoriasDeComida.vue';
 
 const componenteActual = ref('productos'); // Componente por defecto
 

@@ -4,6 +4,7 @@
       <CarritoIcon :totalItems="totalItems" />
     </router-link>
     <VolverHomeButton />
+    <div v-if="mensaje" class="notificacion">{{ mensaje }}</div>
   <div>
    <h2 v-if="productos.length">Productos de {{ productos[0].CategoriaSeccion }}</h2>
     <h2 v-else>Productos</h2>
@@ -31,16 +32,32 @@ import VolverHomeButton from './VolverHomeButton.vue'
 
 const productos = ref([])
 const route = useRoute()
-const addToCart = inject('addToCart')
+const mensaje = ref('')
 const cart = inject('cart')
 const categoria = ref(route.params.categoria)
 console.log('Categoría actual:', categoria.value)
 const cantidades = ref({}) // NUEVO
 
+function addToCartMultiple(producto, cantidad) {
+  for (let i = 0; i < cantidad; i++) {
+    cart.value.push({
+      id: producto.ID,
+      name: producto.Nombre,
+      description: producto.Descripcion,
+      price: producto.Precio,
+      image: producto.Foto,
+      CategoriaSeccion: producto.CategoriaSeccion,
+      observaciones: '' // Cada unidad con su observación individual
+    })
+  }
+}
+
 const agregar = (producto) => {
   const cantidad = cantidades.value[producto.ID] || 1
-  addToCart(producto, cantidad)
-  cantidades.value[producto.ID] = 1 // Opcional: reinicia el input
+  addToCartMultiple(producto, cantidad)
+  cantidades.value[producto.ID] = 1
+  mensaje.value = `¡${cantidad} ${producto.Nombre}${cantidad > 1 ? 's' : ''} agregado${cantidad > 1 ? 's' : ''} al carrito!`
+  setTimeout(() => mensaje.value = '', 1800)
 }
 
 
@@ -64,7 +81,7 @@ watch(() => route.params.categoria, (newCat) => {
   cargarProductos()
 })
 
-const totalItems = computed(() => cart.value.reduce((sum, item) => sum + item.quantity, 0))
+const totalItems = computed(() => cart.value.length)
 </script>
 
 
@@ -87,5 +104,19 @@ button {
 }
 button:hover {
   background: #FFEA70;
+}
+
+.notificacion {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: opacity 0.3s;
 }
 </style>
