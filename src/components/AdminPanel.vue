@@ -27,7 +27,7 @@
       <AdminTransferencias v-if="componenteActual === 'transferencias'" />
       <CategoriasDeComida v-if="componenteActual === 'Categorias'" />
     </div>
-    <button class="volver-login" @click="volverAlLogin">Volver al Login</button>
+    <button class="volver-login" @click="volverAlLogin">Ir a Home</button>
   </div>
 </template>
 
@@ -45,7 +45,7 @@ const mostrarComponente = (componente) => {
 };
 
 const volverAlLogin = () => {
-  window.location.href = '/'; // Redirigir al login
+  window.location.href = '/home'; // Redirigir al login
 };
 </script>
 

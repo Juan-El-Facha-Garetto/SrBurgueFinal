@@ -8,6 +8,10 @@
           <h3>{{ item.name }}</h3>
           <p>Descripcion: {{ item.description }}</p>
           <p>Precio unitario: ${{ item.price }}</p>
+          <label v-if="item.CategoriaSeccion === 'Burguers'">
+              <input type="checkbox" v-model="item.medallonExtra" />
+              Medallón extra (+$1500)
+          </label>
           <input
             v-if="item.CategoriaSeccion !== 'Bebida'"
             v-model="item.observaciones"
@@ -83,7 +87,8 @@ const removeItem = (id) => {
 
 const totalPrice = computed(() => {
   return props.cart.reduce((sum, item) => {
-    const price = Number(item.price) || 0
+    let price = Number(item.price) || 0
+    if (item.CategoriaSeccion === 'Burguers' && item.medallonExtra) price += 1500 // Agrega $1500 si tiene medallón extra
     return sum + price
   }, 0)
 })
@@ -117,19 +122,22 @@ const confirmarCompra = async () => {
 
       // Guarda cada producto del carrito en DetallePedido
       for (const item of props.cart) {
-        await fetch('http://localhost:3000/api/pedidos/detallepedido', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ID_Pedido: pedidoId,
-            ID_Producto: item.id,
-            Cantidad: 1,
-            PrecioUnitario: item.price,
-            Subtotal: item.price,
-            Observaciones: item.observaciones || ''
-          })
-        });
-      }
+        const precioFinal = item.CategoriaSeccion === 'Burguers' && item.medallonExtra
+          ? Number(item.price) + 1500
+          : Number(item.price);
+      await fetch('http://localhost:3000/api/pedidos/detallepedido', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ID_Pedido: pedidoId,
+          ID_Producto: item.id,
+          Cantidad: 1,
+          PrecioUnitario: precioFinal,
+          Subtotal: precioFinal,
+          Observaciones: (item.observaciones || '') + (item.CategoriaSeccion === 'Burguers' && item.medallonExtra ? ' + Medallón extra' : '')
+        })
+      });
+}
 
       router.push({
         name: 'resumen-pedido',

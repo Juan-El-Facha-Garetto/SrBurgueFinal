@@ -9,6 +9,10 @@
           >
         {{ cat.Seccion }} 
       </button>
+      <div>
+        <button v-if="esAdmin" @click="router.push('/admin')">Ir al panel de administrador</button>
+        <button v-else @click="router.push('/login')">Iniciar sesión (Admin)</button>
+      </div>
     </div>
     <CarritoIcon :totalItems="totalItems" @abrir-carrito="irAlCarrito" />
   </div>
@@ -20,6 +24,9 @@ import { useRouter } from 'vue-router'
 import CarritoIcon from './CarritoIcon.vue'
 import { useCartStore } from '@/stores/cart'
 
+// Componente para la página de inicio
+const user = JSON.parse(localStorage.getItem('user') || '{}')
+const esAdmin = user.rol === 'admin'
 
 const categorias = ref([]) 
 const router = useRouter()

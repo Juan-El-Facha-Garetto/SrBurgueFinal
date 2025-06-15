@@ -128,17 +128,17 @@ const enviarPorWhatsapp = () => {
   let mensaje = `*SR BURGUERS*\n\n*Pedido* #${pedidoId}\n`;
 
   mensaje += `*Forma de entrega:* ${formaEntrega.value === 'retiro' ? 'Retiro en sucursal' : 'Envío'}\n`;
-  mensaje += `*A nombre de:* ${nombreEntrega.value}\n`; // SIEMPRE
+  mensaje += `*A nombre de:* ${nombreEntrega.value}\n\n`; // SIEMPRE
   if (formaEntrega.value === 'envio') {
     mensaje += `*Dirección de entrega*: ${direccionEntrega.value}\n`;
     mensaje += `*Ciudad:* ${ciudad.value}\n\n`;
   }
-  mensaje += `*Método de pago:* ${metodo === 1 ? 'Efectivo' : 'Transferencia'}\n`;
+  mensaje += `*Método de pago:* ${metodo === 1 ? 'Efectivo' : 'Transferencia'}\n\n`;
 
   // Agregar datos de transferencia si corresponde
   if (metodo === 2 && cuentasTransferencia.value.length > 0) {
     const cuenta = cuentasTransferencia.value[0]; // Puedes elegir la cuenta que prefieras
-    mensaje += `\n*Datos para Transferencia:*\n`;
+    mensaje += `*Datos para Transferencia:*\n`;
     mensaje += `Alias: _*${cuenta.Alias}*_\n`;
     mensaje += `Titular: _*${cuenta.NombreYApellido}*_\n`;
     mensaje += `Banco: _*${cuenta.Entidad}*_\n\n`;

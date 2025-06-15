@@ -1,20 +1,19 @@
 <template>
   <div class="login">
-    <h1>Iniciar Sesión</h1>
-      <form @submit.prevent="login" class="login-form">
-        <div class="form-group">
-          <label for="username">Usuario:</label>
-          <input type="text" id="username" v-model="username" required />
-        </div>
+    <h1>Iniciar Sesión (Administrador)</h1>
+    <form @submit.prevent="login" class="login-form">
+      <div class="form-group">
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" v-model="username" required />
+      </div>
       <div class="form-group">
         <label for="password">Contraseña:</label>
         <input type="password" id="password" v-model="password" required />
       </div>
-        <button type="submit" class="iniciar-button">Iniciar Sesión</button>
+      <button type="submit" class="iniciar-button">Iniciar Sesión</button>
     </form>
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <p class="register-link">¿No tienes cuenta? <router-link to="/register">Regístrate aquí</router-link></p>
-      <button @click="continueWithoutLogin" class="continue-button">Continuar sin iniciar sesión</button>
+    <button class="iniciar-button" @click="irAHome">Iniciar a Home</button>
+    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
 </template>
 
@@ -29,14 +28,12 @@ const errorMessage = ref(null)
 const router = useRouter()
 const userStore = useUserStore()
 
-
 const login = async () => {
   errorMessage.value = null;
   try {
     const response = await fetch('http://localhost:3000/api/usuarios/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json',
-       },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         Usuario: username.value,
         ClaveIngreso: password.value
@@ -50,24 +47,25 @@ const login = async () => {
       return;
     }
 
+    if (data.rol !== 'admin') {
+      errorMessage.value = 'Solo el administrador puede iniciar sesión aquí.';
+      return;
+    }
+
     userStore.login(data)
     localStorage.setItem('user', JSON.stringify(data))
     localStorage.setItem('token', data.token)
 
-    // Redirección según el rol
-    if (data.rol === 'admin') {
-      router.push('/admin'); // Cambia '/admin' por la ruta de tu panel de admin
-    } else if (data.rol === 'usuario') {
-      router.push('/home'); // Cambia '/home' por la ruta de usuario común
-    }
+    router.push('/admin');
   } catch (error) {
     errorMessage.value = 'Error de conexión con el servidor';
   }
 };
 
-const continueWithoutLogin = () => {
-  router.push('/home') // Redirigir al menú directamente
-}
+const irAHome = () => {
+  router.push('/home');
+};
+
 </script>
 
 <style scoped>

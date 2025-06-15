@@ -12,8 +12,12 @@ import ListaProductosDinamica from '@/components/ListaProductosDinamica.vue'
 import CarritoView from '@/views/CarritoView.vue'
 
 const routes = [
-  {
+    {
     path: '/',
+    redirect: '/home'
+  },
+  {
+    path: '/login',
     name: 'login',
     component: LoginComponent
   },
