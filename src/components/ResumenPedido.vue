@@ -41,28 +41,6 @@
       <div v-if="errorEnvio" style="color: red; margin-top: 5px;">{{ errorEnvio }}</div>
     </form>
 
-    <div v-if="metodo === 2">
-      <h3>Datos para Transferencia</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Alias</th>
-            <th>Cuit</th>
-            <th>Nombre y Apellido</th>
-            <th>Entidad</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="cuenta in cuentasTransferencia" :key="cuenta.ID">
-            <td>{{ cuenta.Alias }}</td>
-            <td>{{ cuenta.Cuit }}</td>
-            <td>{{ cuenta.NombreYApellido }}</td>
-            <td>{{ cuenta.Entidad }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
     <h3>Detalle del pedido</h3>
     <table>
       <thead>
@@ -125,7 +103,7 @@ const volverAlCarrito = () => {
 const enviarPorWhatsapp = () => {
 
   errorEnvio.value = '';
-  let mensaje = `*SR BURGUERS*\n\n*Pedido* #${pedidoId}\n`;
+  let mensaje = `*SR Burgues*\n\n*Pedido* #${pedidoId}\n`;
 
   mensaje += `*Forma de entrega:* ${formaEntrega.value === 'retiro' ? 'Retiro en sucursal' : 'Envío'}\n`;
   mensaje += `*A nombre de:* ${nombreEntrega.value}\n\n`; // SIEMPRE

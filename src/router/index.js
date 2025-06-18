@@ -6,8 +6,6 @@ import LoginComponent from '@/components/LoginComponent.vue'
 import AdminPanel from '@/components/AdminPanel.vue'
 import CrearProducto from '@/components/CrearProducto.vue'
 import EditarProducto from '@/components/EditarProducto.vue'
-import RegisterComponent from '@/components/RegisterComponent.vue'
-import UsuarioComponent from '@/components/UsuarioComponent.vue'
 import ListaProductosDinamica from '@/components/ListaProductosDinamica.vue'
 import CarritoView from '@/views/CarritoView.vue'
 
@@ -56,16 +54,6 @@ const routes = [
     path: '/about',
     name: 'about',
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: RegisterComponent
-  },
-  {
-    path: '/usuario',
-    name: 'usuario',
-    component: UsuarioComponent
   },
   {
   path: '/resumen-pedido/:id/:metodo',
