@@ -55,20 +55,24 @@ function irAlCarrito() {
 <style scoped>
 button {
   margin: 10px;
-  padding: 10px 20px;
-  font-size: 18px;
+  padding: 20px 30px;
+  font-family: 'Georgia', serif;
+  font-size: 15px;
   cursor: pointer;
-  background-color: #FFD600;
-  border: 3px solid black;
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  border: 2px solid #000000;
   font-weight: bold;
-  transition: background 0.2s, border 0.2s;
+  transition: background 0.6s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 button:hover {
-  background-color: #FFEA70;      /* Mostaza más clara al pasar el mouse */
-  border-color: #FFD600;
+  background-color: var(--secondary-color);      /* Mostaza más clara al pasar el mouse */
+  
 }
 
 .Bienvenidos {
+  font-family: 'Georgia', serif;
   text-align: center;
   margin-top: 30px; 
 }

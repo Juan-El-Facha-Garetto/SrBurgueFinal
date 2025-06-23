@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tabla-categorias">
     <h2>Categorías de comida</h2>
     <table>
       <thead>
@@ -129,21 +129,45 @@ onMounted(() => {
 
 <style scoped>
 .mensaje {
+  text-align: center;
   margin-top: 10px;
   font-weight: bold;
   color: #4caf50;
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
+.tabla-categorias{
+  font-family: 'Georgia', serif;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #e2dbcc;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.tabla-categorias option {
+ font-family: 'Georgia', serif;
+  font-size: 16px;
+  color: #000000;
+}
+.tabla-categorias textarea {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+}
+h2 {
+  text-align: center;
   margin-bottom: 20px;
 }
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-}
 button {
-  margin-right: 6px;
+  font-family: 'Georgia', serif;
+  padding: 5px 10px;
+  margin-right: 5px;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  border: 2px solid #000000;
+  cursor: pointer;
+  transition: background-color 0.6s ease;
+}
+button:hover {
+  background-color: var(--secondary-color);
 }
 </style>

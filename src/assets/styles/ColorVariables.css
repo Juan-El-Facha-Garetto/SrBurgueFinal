@@ -1,11 +1,11 @@
 :root {
-  --primary-color: #cccccc; /* Gris claro */
-  --secondary-color: #0074d9; /* Azul brillante */
-  --accent-color: #7fdbff; /* Azul claro */
+  --primary-color: #e2dbcc; /* Gris claro */
+  --secondary-color: #ffd105; /* Azul brillante */
+  --accent-color: #b3700b; /* Azul claro */
   --error-color: #ff4136; /* Rojo */
   --border-color: #cccccc; /* Gris claro */
-  --background-color: #001f3f; /* Azul marino */
-  --text-color: #ffffff; /* Blanco */
+  --background-color: #e2dbcc; /* Beige claro */
+  --text-color: #000000; /* Blanco */
   --label-color: #cccccc; /* Gris claro */
   --Color-base: #FFA07A; /* melocotón claro */
    

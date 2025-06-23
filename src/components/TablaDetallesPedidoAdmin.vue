@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="tabla-detalles">
     <h2>Detalles de Pedidos</h2>
     <table>
-      <thead>
+      <thead class="thead-detalles">
         <tr>
           <th>Pedido</th>
           <th>Fecha</th>
@@ -46,6 +46,22 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.tabla-detalles {
+  font-family: 'Georgia', serif;
+  background-color: var(--primary-color);
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #000000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+.tabla-detalles h2{
+  text-align: center;
+  margin-bottom: 20px;
+}
+.thead-detalles{
+  background-color: var(--secondary-color);
+}
 table {
   border-collapse: collapse;
   width: 100%;

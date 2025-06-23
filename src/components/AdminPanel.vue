@@ -18,10 +18,14 @@
         <li>
           <a href="#" @click.prevent="mostrarComponente('transferencias')">Transferencias</a>
         </li>
+        <li>
+          <a href="#" @click.prevent="mostrarComponente('CrearProducto')">Crear Producto</a>
+        </li>
       </ul>
     </nav>
     <div class="admin-dynamic-content">
       <!-- Renderizado dinámico del componente -->
+       <CrearProducto v-if="componenteActual === 'CrearProducto'" />
       <ListaProductos v-if="componenteActual === 'productos'" />
       <TablaDetallesPedidoAdmin v-if="componenteActual === 'Pedidos'" />
       <AdminTransferencias v-if="componenteActual === 'transferencias'" />
@@ -33,10 +37,12 @@
 
 <script setup>
 import { ref } from 'vue';
+import CrearProducto from './CrearProducto.vue';
 import ListaProductos from './ListaProductos.vue';
 import AdminTransferencias from './AdminTransferencias.vue';
 import TablaDetallesPedidoAdmin from './TablaDetallesPedidoAdmin.vue';
 import CategoriasDeComida from './CategoriasDeComida.vue';
+// Importar los componentes necesarios
 
 const componenteActual = ref('productos'); // Componente por defecto
 
@@ -50,19 +56,25 @@ const volverAlLogin = () => {
 </script>
 
 <style scoped>
+
 .admin-panel {
   padding: 20px;
 }
 
 .volver-login {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: var(--background-color);
+  background-color: var(--primary-color);
   color: var(--text-color);
-  border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 2px solid #000000;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.6s ease;
+}
+.volver-login:hover {
+  background-color: var(--secondary-color);
 }
 .lista-productos {
   max-width: auto;
@@ -80,18 +92,22 @@ const volverAlLogin = () => {
   margin: 0;
 }
 .admin-content {
-  background-color: var(--background-color);
+  font-family: 'Georgia', serif;
+  background-color: var(--primary-color);
   padding: 20px;
   border-radius: 8px;
+  border: 2px solid #000000;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
 }
 .admin-nav {
+   font-family: 'Georgia', serif;
   background-color: var(--primary-color);
-  display: flex ;
-  flex-direction: column;
-  padding: 10px;
+  padding: 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  border: 2px solid #000000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
 }
 
 .admin-nav ul {
@@ -107,17 +123,17 @@ const volverAlLogin = () => {
 
 .admin-nav > ul > li > a {
   text-decoration: none;
-  color: var(--text-color);
+  color: black;
   font-weight: bold;
   padding: 10px 15px;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.6s ease;
   display: block;
 }
 
 .admin-nav > ul > li > a:hover {
   background-color: var(--secondary-color);
-  color: var(--background-color);
+  
 }
 
 .dropdown {

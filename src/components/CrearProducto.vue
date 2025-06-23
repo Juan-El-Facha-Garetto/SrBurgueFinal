@@ -28,7 +28,7 @@
         <input type="file" id="photo" @change="handleFileUpload" />
       </div>
       <button type="submit">Crear Producto</button>
-      <button type="button" @click="router.push('/admin')">Volver al lobby</button>
+     
     </form>
   </div>
 </template>
@@ -39,6 +39,16 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 import { authFetch } from '@/helpers/authFetch'
+
+// Verificación de autenticación al montar el componente
+onMounted(() => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    router.push('/login') // o la ruta de login que uses
+  }
+})
+
+
 
 const categorias = ref([])
 const product = ref({
@@ -91,14 +101,23 @@ onMounted(async () => {
 
 <style scoped>
 .crear-producto {
+  font-family: 'Georgia', serif;
   max-width: 500px;
   margin: 0 auto;
   padding: 20px;
-  background-color: white;
+  background-color: var(--primary-color);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
+.crear-producto option {
+ font-family: 'Georgia', serif;
+  font-size: 16px;
+  color: #000000;
+}
+.crear-producto textarea {
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+}
 h2 {
   text-align: center;
   margin-bottom: 20px;
@@ -106,6 +125,7 @@ h2 {
 
 .form-group {
   margin-bottom: 15px;
+  
 }
 
 label {
@@ -124,18 +144,20 @@ textarea {
 }
 
 button {
+  font-family: 'Georgia', serif;
+  font-size: 20px;
   width: 100%;
   padding: 10px;
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
   color: var(--text-color);
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #000000;
+  transition: background-color 0.6s ease;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: var(--accent-color);
+  background-color: var(--secondary-color);
 }
 a{
   display: block;

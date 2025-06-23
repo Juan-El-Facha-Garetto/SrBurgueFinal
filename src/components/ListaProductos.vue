@@ -1,9 +1,9 @@
 <template>
   <div class="lista-productos">
     <h2>Lista de Productos</h2>
+   
     <table>
       <thead>
-        <button @click="agregarProducto" class="Agregar">Agregar Producto</button>
         <tr>
           <th>Nombre</th>
           <th>Descripción</th>
@@ -13,14 +13,14 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="productos-lista">
         <tr v-for="producto in productos" :key="producto.ID">
           <td>{{ producto.Nombre }}</td>
           <td>{{ producto.Descripcion }}</td>
           <td>${{ producto.Precio }}</td>
           <td>{{ producto.CategoriaSeccion }}</td> 
           <td>
-            <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" alt="Foto" width="60" />
+            <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" alt="Foto" width="70" />
           </td>
           <td>
             <button @click="editarProducto(producto.ID)">Editar</button>
@@ -50,9 +50,6 @@ onMounted(async () => {
   }
 })
 
-const agregarProducto = () => {
-  router.push('/crear-producto')
-}
 const editarProducto = (id) => {
   router.push(`/editar-producto/${id}`)
 }
@@ -73,24 +70,56 @@ const eliminarProducto = async (id) => {
 </script>
 
 <style scoped>
+.btnAgregar {
+  width: calc(100% - 20px);
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  color: #000000;
+  border: 2px solid #000000;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.6s ease;
+   font-family: 'Georgia', serif;
+   font-size: 1.5rem;
+}
+
 .lista-productos {
   max-width: calc(100% - 40px);
   margin: 0 auto;
   padding: 20px;
-  background-color: var(--background-color);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #000000;
+  border-radius: 4px;
+}
+.lista-productos h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'Georgia', serif;
+  color: #000000;
+}
+.lista-productos tr{ 
+  background-color: #e2dbcc;
+  font-family: 'Georgia', serif;
+  color: #000000;
+  border: 2px solid #000000;
+
+}
+.productos-lista{
+   background-color: #e2dbcc
+
 }
 .Agregar {
   width: calc(100% - 20px);
   margin-bottom: 20px;
   padding: 10px 20px;
-  background-color: var(--background-color);
+  background-color: #e2dbcc;
   color: var(--text-color);
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.6s ease;
 }
 h2 {
   text-align: center;
@@ -100,11 +129,6 @@ h2 {
 table {
   width: 100%;
   border-collapse: collapse;
-}
-
-thead {
-  background-color: var(--primary-color);
-  color: var(--text-color);
 }
 
 th, td {
@@ -118,16 +142,18 @@ tbody tr:nth-child(even) {
 }
 
 button {
+  font-family: 'Georgia', serif;
   padding: 5px 10px;
   margin-right: 5px;
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
   color: var(--text-color);
-  border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 2px solid #000000;
   cursor: pointer;
+  transition: background-color 0.6s ease;
+}
+button:hover {
+  background-color: var(--secondary-color);
 }
 
-button:hover {
-  background-color: var(--accent-color);
-}
 </style>

@@ -5,15 +5,15 @@
     </router-link>
     <VolverHomeButton />
     <div v-if="mensaje" class="notificacion">{{ mensaje }}</div>
-  <div>
+  <div class="lista-productos">
    <h2 v-if="productos.length">Productos de {{ productos[0].CategoriaSeccion }}</h2>
     <h2 v-else>Productos</h2>
     <ul v-if="productos.length">
       <li v-for="producto in productos" :key="producto.ID">
-        <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" :alt="producto.Nombre" width="120" />
+        <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" :alt="producto.Nombre"/>
         <h3>{{ producto.Nombre }}</h3>
-        <p>{{ producto.Descripcion }}</p>
-        <p>Precio: ${{ producto.Precio }}</p>
+        <p class="descripcion">{{ producto.Descripcion }}</p>
+        <p class="precio">Precio: ${{ producto.Precio }}</p>
 
         <input type="number" min="1" v-model.number="cantidades[producto.ID]" style="width: 60px; margin-right: 8px;"/>
 
@@ -89,24 +89,6 @@ const totalItems = computed(() => cart.value.length)
 
 
 <style scoped>
-.categorias-botones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-button {
-  padding: 10px 20px;
-  background: #FFD600;
-  border: 2px solid #333;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-button:hover {
-  background: #FFEA70;
-}
 
 .notificacion {
   position: fixed;
@@ -117,8 +99,70 @@ button:hover {
   padding: 14px 24px;
   border-radius: 8px;
   font-weight: bold;
+  font-family: 'Georgia', serif;
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: opacity 0.3s;
+  transition: opacity 0.6s;
+}
+
+
+.lista-productos {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  border: 2px solid #000000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lista-productos h2{
+ font-family: 'Georgia', serif;
+  text-align: center;
+  margin-top: 30px; 
+}
+.lista-productos h3{
+  font-family: 'Georgia', serif;
+  margin: 10px 0;
+}
+.lista-productos ul li {
+  margin-bottom: 30px; /* Ajusta el valor según prefieras */
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--secondary-color); /* Opcional: línea divisoria suave */
+}
+.lista-productos button {
+  margin: 10px;
+  padding: 10px 10px;
+  font-family: 'Georgia', serif;
+  font-size: 15px;
+  cursor: pointer;
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  border: 2px solid #000000;
+  font-weight: bold;
+  transition: background 0.6s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+button:hover {
+  background-color: var(--secondary-color);      /* Mostaza más clara al pasar el mouse */
+  
+}
+.lista-productos img {
+  max-width: 160px; /* Ajusta el tamaño de la imagen */
+  height: auto;
+  border-radius: 8px;
+  margin-right: 20px; /* Espacio entre imagen y texto */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+.descripcion{
+  font-family: 'Georgia', serif;
+  margin: 5px 0;
+}
+.precio {
+  font-family: 'Georgia', serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+  margin: 5px 0;
 }
 </style>

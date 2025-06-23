@@ -27,7 +27,8 @@
         <label for="photo">Foto:</label>
         <input type="file" id="photo" @change="handleFileUpload" />
         <div v-if="product.Foto && typeof product.Foto === 'string'">
-          <img :src="`http://localhost:3000/uploads/${product.Foto}`" alt="Foto actual" width="80" />
+          <img :src="`http://localhost:3000/uploads/${product.Foto}`" alt="Foto actual" 
+          class="img-preview"/>
         </div>
       </div>
       <button type="submit">Guardar Producto</button>
@@ -105,12 +106,21 @@ onMounted(() => {
 
 <style scoped>
 .editar-producto {
+  font-family: 'Georgia', serif;
   max-width: 500px;
   margin: 0 auto;
   padding: 20px;
   background-color: var(--background-color);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.img-preview {
+  display: block;
+  margin: 0 auto 10px auto; /* Centra y agrega margen abajo */
+  width: 180px;             /* O el tamaño que prefieras */
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
 h2 {
@@ -138,18 +148,23 @@ textarea {
 }
 
 button {
+  font-family: 'Georgia', serif;
+  font-size: 20px;
   width: 100%;
   padding: 10px;
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
   color: var(--text-color);
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #000000;
+  transition: background-color 0.6s ease;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: var(--accent-color);
+  background-color: var(--secondary-color);
+}
+button + button {
+  margin-top: 10px;
 }
 a{
   display: block;

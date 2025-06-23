@@ -43,6 +43,7 @@ provide('handleClearCart', handleClearCart)
 <style>
 body {
   font-family: Arial, sans-serif;
-  background-color: var(--Color-base);
+  background-color: #cca90c;
 }
+
 </style>

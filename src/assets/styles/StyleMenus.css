@@ -103,6 +103,18 @@ button:hover {
   border-color: #FFD600;
 }
 
+ :root {
+  --primary-color: #7c5c20;      /* Marrón oscuro */
+  --secondary-color: #bfa76f;    /* Dorado vintage */
+  --accent-color: #e7d9b1;       /* Beige claro */
+  --error-color: #ff4136;        /* Rojo */
+  --border-color: #bfa76f;       /* Dorado vintage */
+  --background-color: #fffbe6;   /* Fondo claro vintage */
+  --text-color: #7c5c20;         /* Marrón oscuro */
+  --label-color: #bfa76f;        /* Dorado vintage */
+  --Color-base: #FFA07A;         /* Melocotón claro (opcional) */
+}
+
 /* Responsive para móviles */
 @media (max-width: 600px) {
   ul {
@@ -132,4 +144,5 @@ button:hover {
     width: 90vw;
     max-width: 320px;
   }
+ 
 }
