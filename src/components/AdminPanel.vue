@@ -31,12 +31,15 @@
       <AdminTransferencias v-if="componenteActual === 'transferencias'" />
       <CategoriasDeComida v-if="componenteActual === 'Categorias'" />
     </div>
-    <button class="volver-login" @click="volverAlLogin">Ir a Home</button>
+    <button class="volver-login" @click="volverAlLogin">Ir a Home</button> |
+    <button class="volver-login" @click="cerrarSesion">Cerrar sesión</button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user'; // Asegúrate de tener un store para manejar el estado del usuario
 import CrearProducto from './CrearProducto.vue';
 import ListaProductos from './ListaProductos.vue';
 import AdminTransferencias from './AdminTransferencias.vue';
@@ -44,7 +47,10 @@ import TablaDetallesPedidoAdmin from './TablaDetallesPedidoAdmin.vue';
 import CategoriasDeComida from './CategoriasDeComida.vue';
 // Importar los componentes necesarios
 
-const componenteActual = ref('productos'); // Componente por defecto
+
+const componenteActual = ref('productos');
+const router = useRouter();
+const userStore = useUserStore(); // Componente por defecto
 
 const mostrarComponente = (componente) => {
   componenteActual.value = componente;
@@ -53,6 +59,11 @@ const mostrarComponente = (componente) => {
 const volverAlLogin = () => {
   window.location.href = '/home'; // Redirigir al login
 };
+
+const cerrarSesion = () => {
+  userStore.logout(); // Llamar al método de logout del store
+  router.push('/login'); // Redirigir al login
+};  
 </script>
 
 <style scoped>
