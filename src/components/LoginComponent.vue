@@ -71,6 +71,7 @@ const irAHome = () => {
 <style scoped>
 
 .login {
+  font-family: 'Georgia', serif;
   max-width: 400px;
   margin: 50px auto;
   padding: 20px;
@@ -82,18 +83,24 @@ const irAHome = () => {
 
 h1 {
   text-align: center;
-  color: var(--primary-color);
+  color: black;
   margin-bottom: 20px;
 }
 .iniciar-button {
-  width: 100%;
-  padding: 10px;
-  background-color: var(--secondary-color);
-  color: var(--text-color);
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  display: block;
+  margin: 10px auto;
+  padding: 10px 20px;
+  font-family: 'Georgia', serif;
+  font-size: 18px;
   cursor: pointer;
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  border: 2px solid #000000;
+  font-weight: bold;
+  transition: background-color 0.6s ease;
+}
+.iniciar-button:hover {
+  background-color: var(--secondary-color); /* Mostaza más clara al pasar el mouse */
 }
 
 .login-form {
