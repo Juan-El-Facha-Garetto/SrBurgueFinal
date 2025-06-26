@@ -95,13 +95,7 @@ const cerrarSesion = () => {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.Principal {
-  display: flex;
-  justify-content: space-between;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+
 .admin-content {
   font-family: 'Georgia', serif;
   background-color: var(--primary-color);
@@ -122,10 +116,12 @@ const cerrarSesion = () => {
 }
 
 .admin-nav ul {
-  list-style: none;
+  list-style: none; 
   padding: 0;
   margin: 0;
- 
+ display: flex;           
+  flex-direction: row;  
+  gap: 10px;               
 }
 
 .admin-nav > ul > li {
