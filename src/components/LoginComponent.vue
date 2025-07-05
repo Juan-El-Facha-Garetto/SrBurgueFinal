@@ -18,12 +18,12 @@
 </template>
 
 <script setup>
+
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
-
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = process.env.VUE_APP_API_URL;
 
 const username = ref('')
 const password = ref('')
