@@ -2,52 +2,48 @@ import { getConnection } from '../conexion.js';
 
 export const getCategorias = async (req, res) => {
     try {
-        const pool = await getConnection();
-        const result = await pool.request().query("SELECT ID, Seccion FROM Categoria");
-        res.json(result.recordset);
+        const client = await getConnection();
+        const result = await client.query('SELECT ID, Seccion FROM Categoria');
+        res.json(result.rows);
     } catch (error) {
-        res.status(500).json({ error: 'Error al obtener categorías' });
+        console.error('Error en getCategorias:', error);
+        res.status(500).json({ error: 'Error al obtener categorías', detalle: error.message });
     }
 };
 
 export const crearCategoria = async (req, res) => {
     try {
-        const { Seccion, Detalle } = req.body;
-        const pool = await getConnection();
-        await pool.request()
-            .input('Seccion', Seccion)
-            .query('INSERT INTO Categoria (Seccion) VALUES (@Seccion)');
+        const { Seccion } = req.body;
+        const client = await getConnection();
+        await client.query('INSERT INTO Categoria (Seccion) VALUES ($1)', [Seccion]);
         res.status(201).json({ message: 'Categoría creada exitosamente' });
     } catch (error) {
-        res.status(500).json({ error: 'Error al crear la categoría' });
+        console.error('Error en crearCategoria:', error);
+        res.status(500).json({ error: 'Error al crear la categoría', detalle: error.message });
     }
 };
 
 export const eliminarCategoria = async (req, res) => {
     try {
         const { id } = req.params;
-        const pool = await getConnection();
-        await pool.request()
-            .input('ID', id)
-            .query('DELETE FROM Categoria WHERE ID = @ID');
+        const client = await getConnection();
+        await client.query('DELETE FROM Categoria WHERE ID = $1', [id]);
         res.json({ message: 'Categoría eliminada correctamente' });
     } catch (error) {
-           console.error(error); // <-- AGREGA ESTA LÍNEA
-        res.status(500).json({ error: 'Error al eliminar la categoría' });
+        console.error('Error en eliminarCategoria:', error);
+        res.status(500).json({ error: 'Error al eliminar la categoría', detalle: error.message });
     }
 };
 
 export const editarCategoria = async (req, res) => {
     try {
         const { id } = req.params;
-        const { Seccion, Detalle } = req.body;
-        const pool = await getConnection();
-        await pool.request()
-            .input('ID', id)
-            .input('Seccion', Seccion)
-            .query('UPDATE Categoria SET Seccion = @Seccion WHERE ID = @ID');
+        const { Seccion } = req.body;
+        const client = await getConnection();
+        await client.query('UPDATE Categoria SET Seccion = $1 WHERE ID = $2', [Seccion, id]);
         res.json({ message: 'Categoría actualizada correctamente' });
     } catch (error) {
-        res.status(500).json({ error: 'Error al actualizar la categoría' });
+        console.error('Error en editarCategoria:', error);
+        res.status(500).json({ error: 'Error al actualizar la categoría', detalle: error.message });
     }
 };
