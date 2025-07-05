@@ -55,18 +55,19 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
+const API_URL = process.env.VUE_APP_API_URL;
 const cuentas = ref([]);
 const nueva = ref({ Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' });
 const editando = ref(false);
 const editId = ref(null);
 
 const cargarCuentas = async () => {
-  const res = await fetch('http://localhost:3000/api/transferencias');
+  const res = await fetch(`${API_URL}/api/transferencias`);
   cuentas.value = await res.json();
 };
 
 const agregarCuenta = async () => {
-  await fetch('http://localhost:3000/api/transferencias', {
+  await fetch(`${API_URL}/api/transferencias`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(nueva.value)
@@ -82,7 +83,7 @@ const editarCuenta = (cuenta) => {
 };
 
 const guardarEdicion = async () => {
-  await fetch(`http://localhost:3000/api/transferencias/${editId.value}`, {
+  await fetch(`${API_URL}/api/transferencias/${editId.value}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(nueva.value)
@@ -100,7 +101,7 @@ const cancelarEdicion = () => {
 };
 
 const eliminarCuenta = async (id) => {
-  await fetch(`http://localhost:3000/api/transferencias/${id}`, {
+  await fetch(`${API_URL}/api/transferencias/${id}`, {
     method: 'DELETE'
   });
   cargarCuentas();
