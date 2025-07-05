@@ -22,6 +22,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 const username = ref('')
 const password = ref('')
 const errorMessage = ref(null)
@@ -31,7 +34,7 @@ const userStore = useUserStore()
 const login = async () => {
   errorMessage.value = null;
   try {
-    const response = await fetch('http://localhost:3000/api/usuarios/login', {
+    const response = await fetch(`${API_URL}/api/usuarios/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
