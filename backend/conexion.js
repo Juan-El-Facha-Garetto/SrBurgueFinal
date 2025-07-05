@@ -1,24 +1,13 @@
-import mssql from 'mssql';
+import pkg from 'pg';
+const { Pool } = pkg;
 
-const connectionSettings = {
-    server: 'localhost',
-    database: 'BurguersFinal1',
-    user: 'Juan',
-    password: 'Juan123',
-    options: {
-        encrypt: true,
-        trustServerCertificate: true,
-    }
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL, // Tu URL de Render PostgreSQL
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+export const getConnection = async () => {
+  return await pool.connect();
 };
-
-export async function getConnection() {
-    try {
-        return await mssql.connect(connectionSettings);
-        
-    }
-   catch (error) {
-        console.error("Error connecting to the database: ", error);
-        throw error;
-    }
-}
-export {mssql};

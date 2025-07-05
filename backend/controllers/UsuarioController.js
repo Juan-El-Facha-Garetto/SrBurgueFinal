@@ -1,19 +1,15 @@
-import { mssql, getConnection } from '../conexion.js';
+import { getConnection } from '../conexion.js';
 import { generarToken } from '../utils/jwt.js';
 
 export const agregarUsuario = async (req, res) => {
   try {
-    const { ID_Persona, ID_Rol, Usuario, ClaveIngreso } = req.body;
-    const pool = await getConnection();
-    await pool.request()
-      .input("ID_Persona", mssql.Int, ID_Persona)
-      .input("ID_Rol", mssql.Int, ID_Rol)
-      .input("Usuario", mssql.VarChar, Usuario)
-      .input("ClaveIngreso", mssql.VarChar, ClaveIngreso)
-      .query(`
-        INSERT INTO Usuario (ID_Persona, ID_Rol, Usuario, ClaveIngreso)
-        VALUES (@ID_Persona, @ID_Rol, @Usuario, @ClaveIngreso)
-      `);
+    const { ID_Rol, Usuario, ClaveIngreso } = req.body;
+    const client = await getConnection();
+    await client.query(
+      `INSERT INTO Usuario (ID_Rol, Usuario, ClaveIngreso)
+       VALUES ($1, $2, $3)`,
+      [ID_Rol, Usuario, ClaveIngreso]
+    );
     res.status(201).json({ message: "Usuario creado correctamente" });
   } catch (error) {
     console.error("Error al crear usuario:", error);
@@ -24,36 +20,37 @@ export const agregarUsuario = async (req, res) => {
 export const loginUsuario = async (req, res) => {
   try {
     const { Usuario, ClaveIngreso } = req.body;
-    const pool = await getConnection();
+    const client = await getConnection();
 
     // Buscar por nombre de usuario
-    const result = await pool.request()
-      .input('Usuario', mssql.VarChar, Usuario)
-      .query('SELECT * FROM Usuario WHERE Usuario = @Usuario');
+    const result = await client.query(
+      'SELECT * FROM Usuario WHERE Usuario = $1',
+      [Usuario]
+    );
 
-    if (result.recordset.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).json({ message: 'El usuario no existe. Por favor regístrese.' });
     }
 
-    const user = result.recordset[0];
+    const user = result.rows[0];
 
-    if (user.ClaveIngreso !== ClaveIngreso) {
+    if (user.claveingreso !== ClaveIngreso) {
       return res.status(401).json({ message: 'Contraseña incorrecta.' });
     }
 
-     const rol = user.ID_Rol === 1 ? 'admin' : 'usuario';
+     const rol = user.id_rol === 1 ? 'admin' : 'usuario';
 
     // Genera el token
     const token = generarToken({
-      ID: user.ID,
+      ID: user.id,
       rol,
-      Usuario: user.Usuario
+      Usuario: user.usuario
     });
 
     // Devuelve datos y token
     res.json({
-      id: user.ID,
-      usuario: user.Usuario,
+      id: user.id,
+      usuario: user.usuario,
       rol,
       token
     });

@@ -1,11 +1,9 @@
 import { getConnection } from '../conexion.js';
-import mssql from 'mssql';
-
 
 export const getProductos = async (req, res) => {
     try {
-        const pool = await getConnection();
-        const result = await pool.request().query(`
+        const client = await getConnection();
+        const result = await client.query(`
             SELECT 
                 P.ID, 
                 P.ID_Categoria, 
@@ -17,7 +15,7 @@ export const getProductos = async (req, res) => {
             FROM Producto P
             LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
         `);
-        res.json(result.recordset);
+        res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener productos' });
     }
@@ -31,19 +29,14 @@ export const createProducto = async (req, res) => {
         const { ID_Categoria, Nombre, Descripcion, Precio } = req.body;
         const Foto = req.file ? req.file.filename : null;
 
-        const pool = await getConnection();
+        const client = await getConnection();
         console.log('Conexión establecida');
 
-        await pool.request()
-            .input('ID_Categoria', ID_Categoria)
-            .input('Nombre', Nombre)
-            .input('Descripcion', Descripcion)
-            .input('Precio', Precio)
-            .input('Foto', Foto)
-            .query(`
-                INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Precio, Foto)
-                VALUES (@ID_Categoria, @Nombre, @Descripcion, @Precio, @Foto)
-            `);
+        await client.query(
+            `INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Precio, Foto)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [ID_Categoria, Nombre, Descripcion, Precio, Foto]
+        );
 
         res.status(201).json({ message: 'Producto creado' });
     } catch (error) {
@@ -55,26 +48,25 @@ export const createProducto = async (req, res) => {
 export const getProductoById = async (req, res) => {
     try {
         const { id } = req.params;
-        const pool = await getConnection();
-        const result = await pool.request()
-            .input('ID', id)
-            .query(`
-                SELECT 
-                    P.ID, 
-                    P.ID_Categoria, 
-                    P.Nombre, 
-                    P.Descripcion, 
-                    P.Precio, 
-                    P.Foto,
-                    C.Seccion AS CategoriaSeccion
-                FROM Producto P
-                LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
-                WHERE P.ID = @ID
-            `);
-        if (result.recordset.length === 0) {
+        const client = await getConnection();
+        const result = await client.query(
+            `SELECT 
+                P.ID, 
+                P.ID_Categoria, 
+                P.Nombre, 
+                P.Descripcion, 
+                P.Precio, 
+                P.Foto,
+                C.Seccion AS CategoriaSeccion
+            FROM Producto P
+            LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
+            WHERE P.ID = $1`,
+            [id]
+        );
+        if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Producto no encontrado' });
         }
-        res.json(result.recordset[0]);
+        res.json(result.rows[0]);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al obtener producto' });
@@ -84,12 +76,10 @@ export const getProductoById = async (req, res) => {
 export const deleteProducto = async (req, res) => {
     try {
         const { id } = req.params;
-        console.log('Intentando eliminar producto con ID:', id); // <-- Agrega esto
-        const pool = await getConnection();
-        const result = await pool.request()
-            .input('ID', id)
-            .query('DELETE FROM Producto WHERE ID = @ID');
-        console.log('Filas afectadas:', result.rowsAffected); // <-- Agrega esto
+        console.log('Intentando eliminar producto con ID:', id);
+        const client = await getConnection();
+        const result = await client.query('DELETE FROM Producto WHERE ID = $1', [id]);
+        console.log('Filas afectadas:', result.rowCount);
         res.json({ message: 'Producto eliminado' });
     } catch (error) {
         console.error(error);
@@ -109,15 +99,11 @@ export const updateProducto = async (req, res) => {
             Foto = req.body.Foto;
         }
 
-        const pool = await getConnection();
-        await pool.request()
-            .input('ID', id)
-            .input('ID_Categoria', ID_Categoria)
-            .input('Nombre', Nombre)
-            .input('Descripcion', Descripcion)
-            .input('Precio', Precio)
-            .input('Foto', Foto)
-            .query('UPDATE Producto SET ID_Categoria=@ID_Categoria, Nombre=@Nombre, Descripcion=@Descripcion, Precio=@Precio, Foto=@Foto WHERE ID=@ID');
+        const client = await getConnection();
+        await client.query(
+            'UPDATE Producto SET ID_Categoria=$1, Nombre=$2, Descripcion=$3, Precio=$4, Foto=$5 WHERE ID=$6',
+            [ID_Categoria, Nombre, Descripcion, Precio, Foto, id]
+        );
         res.json({ message: 'Producto actualizado' });
     } catch (error) {
         console.error(error);
@@ -129,7 +115,7 @@ export const getProductosFiltrados = async (req, res) => {
   try {
     console.log('consulta recibida:', req.query);
     const { idCategoria } = req.query;
-    const pool = await getConnection();
+    const client = await getConnection();
     let query = `
       SELECT 
         P.ID, 
@@ -142,14 +128,14 @@ export const getProductosFiltrados = async (req, res) => {
       FROM Producto P
       LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
     `;
+    let params = [];
     if (idCategoria) {
-      query += " WHERE P.ID_Categoria = @idCategoria";
+      query += " WHERE P.ID_Categoria = $1";
+      params = [idCategoria];
     }
-    const request = pool.request();
-    if (idCategoria) request.input('idCategoria', mssql.Int, idCategoria);
-    const result = await request.query(query);
-    console.log('Productos filtrados:', result.recordset);
-    res.json(result.recordset);
+    const result = await client.query(query, params);
+    console.log('Productos filtrados:', result.rows);
+    res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener productos' });
   }

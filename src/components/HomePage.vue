@@ -35,7 +35,7 @@ const cartStore = useCartStore()
 const totalItems = computed(() => cartStore.items.reduce((sum, item) => sum + item.quantity, 0))
 
 onMounted(async () => {
-  const response = await fetch('http://localhost:3000/api/categorias')
+  const response = await fetch('https://srburguefinal.onrender.com/api/categorias')
   if (response.ok) {
     categorias.value = await response.json()
   } else {
