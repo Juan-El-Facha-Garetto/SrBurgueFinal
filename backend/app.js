@@ -3,7 +3,6 @@ import cors from 'cors';
 
 import productosRoutes from './routes/productosRoutes.js';
 import categoriasRoutes from './routes/categoriasRoutes.js';
-import personaRoutes from './routes/personaRoutes.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import pedidoRoutes from './routes/pedidoRoutes.js';
@@ -22,7 +21,6 @@ app.use(express.json());
 // Rutas
 app.use('/api/productos', productosRoutes);
 app.use('/api/categorias', categoriasRoutes);
-app.use('/api/personas', personaRoutes);
 app.use('/all', personaRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/pedidos', pedidoRoutes);
