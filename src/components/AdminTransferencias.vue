@@ -13,9 +13,9 @@
       </thead>
       <tbody>
         <tr v-for="cuenta in cuentas" :key="cuenta.ID">
-          <td>{{ cuenta.agregarCuentalias }}</td>
+          <td>{{ cuenta.alias }}</td>
           <td>{{ cuenta.cuit }}</td>
-          <td>{{ cuenta.nombreYApellido }}</td>
+          <td>{{ cuenta.nombreyapellido }}</td>
           <td>{{ cuenta.entidad }}</td>
           <td>
             <button @click="editarCuenta(cuenta)">Editar</button>
@@ -37,7 +37,7 @@
     </div>
     <div class="form-group">
       <label for="nombreyapellido">Nombre y Apellido:</label>
-      <input v-model="nueva.nombreYApellido" placeholder="Nombre y Apellido" required />
+      <input v-model="nueva.nombreyapellido" placeholder="Nombre y Apellido" required />
     </div>
     <div class="form-group">
       <label for="entidad">Entidad:</label>
@@ -57,7 +57,7 @@ import { ref, onMounted } from 'vue';
 
 const API_URL = process.env.VUE_APP_API_URL;
 const cuentas = ref([]);
-const nueva = ref({ alias: '', cuit: '', nombreYApellido: '', entidad: '' });
+const nueva = ref({ alias: '', cuit: '', nombreyapellido: '', entidad: '' });
 const editando = ref(false);
 const editId = ref(null);
 
@@ -72,7 +72,7 @@ const agregarCuenta = async () => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(nueva.value)
   });
-  nueva.value = { Alias: '', Cuit: '', nombreYApellido: '', Entidad: '' };
+  nueva.value = { Aalias: '', cuit: '', nombreyapellido: '', entidad: '' };
   cargarCuentas();
 };
 
@@ -88,14 +88,14 @@ const guardarEdicion = async () => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(nueva.value)
   });
-  nueva.value = { alias: '', auit: '', nombreYApellido: '', entidad: '' };
+  nueva.value = { alias: '', cuit: '', nombreyapellido: '', entidad: '' };
   editando.value = false;
   editId.value = null;
   cargarCuentas();
 };
 
 const cancelarEdicion = () => {
-  nueva.value = { alias: '', cuit: '', nombreYApellido: '', entidad: '' };
+  nueva.value = { alias: '', cuit: '', nombreyapellido: '', entidad: '' };
   editando.value = false;
   editId.value = null;
 };
