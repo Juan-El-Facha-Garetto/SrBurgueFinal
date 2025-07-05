@@ -13,10 +13,10 @@
       </thead>
       <tbody>
         <tr v-for="cuenta in cuentas" :key="cuenta.ID">
-          <td>{{ cuenta.Alias }}</td>
-          <td>{{ cuenta.Cuit }}</td>
-          <td>{{ cuenta.NombreYApellido }}</td>
-          <td>{{ cuenta.Entidad }}</td>
+          <td>{{ cuenta.agregarCuentalias }}</td>
+          <td>{{ cuenta.cuit }}</td>
+          <td>{{ cuenta.nombreYApellido }}</td>
+          <td>{{ cuenta.entidad }}</td>
           <td>
             <button @click="editarCuenta(cuenta)">Editar</button>
             <button @click="eliminarCuenta(cuenta.ID)">Eliminar</button>
@@ -29,19 +29,19 @@
   <form @submit.prevent="editando ? guardarEdicion() : agregarCuenta()" class="form">
     <div class="form-group">
       <label for="alias">Alias:</label>
-      <input v-model="nueva.Alias" placeholder="Alias" required />
+      <input v-model="nueva.alias" placeholder="Alias" required />
     </div>
     <div class="form-group">
       <label for="cuit">C.U.I.T.:</label>
-      <input v-model="nueva.Cuit" placeholder="Cuit" required />
+      <input v-model="nueva.cuit" placeholder="Cuit" required />
     </div>
     <div class="form-group">
       <label for="nombreyapellido">Nombre y Apellido:</label>
-      <input v-model="nueva.NombreYApellido" placeholder="Nombre y Apellido" required />
+      <input v-model="nueva.nombreYApellido" placeholder="Nombre y Apellido" required />
     </div>
     <div class="form-group">
       <label for="entidad">Entidad:</label>
-      <input v-model="nueva.Entidad" placeholder="Entidad" required />
+      <input v-model="nueva.entidad" placeholder="Entidad" required />
     </div>
     <div class="form-group botones">
       <button type="submit">{{ editando ? 'Guardar' : 'Agregar' }}</button>
@@ -57,7 +57,7 @@ import { ref, onMounted } from 'vue';
 
 const API_URL = process.env.VUE_APP_API_URL;
 const cuentas = ref([]);
-const nueva = ref({ Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' });
+const nueva = ref({ alias: '', cuit: '', nombreYApellido: '', entidad: '' });
 const editando = ref(false);
 const editId = ref(null);
 
@@ -72,7 +72,7 @@ const agregarCuenta = async () => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(nueva.value)
   });
-  nueva.value = { Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' };
+  nueva.value = { Alias: '', Cuit: '', nombreYApellido: '', Entidad: '' };
   cargarCuentas();
 };
 
@@ -88,14 +88,14 @@ const guardarEdicion = async () => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(nueva.value)
   });
-  nueva.value = { Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' };
+  nueva.value = { alias: '', auit: '', nombreYApellido: '', entidad: '' };
   editando.value = false;
   editId.value = null;
   cargarCuentas();
 };
 
 const cancelarEdicion = () => {
-  nueva.value = { Alias: '', Cuit: '', NombreYApellido: '', Entidad: '' };
+  nueva.value = { alias: '', cuit: '', nombreYApellido: '', entidad: '' };
   editando.value = false;
   editId.value = null;
 };
