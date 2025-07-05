@@ -21,7 +21,6 @@ app.use(express.json());
 // Rutas
 app.use('/api/productos', productosRoutes);
 app.use('/api/categorias', categoriasRoutes);
-app.use('/all', personaRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/admin', adminRoutes);
