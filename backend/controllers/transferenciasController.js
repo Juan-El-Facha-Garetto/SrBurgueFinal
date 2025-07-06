@@ -11,12 +11,12 @@ export const getCuentasTransferencia = async (req, res) => {
 };
 
 export const addCuentaTransferencia = async (req, res) => {
-  const { Alias, Cuit, NombreYApellido, Entidad } = req.body;
+  const { alias, cuit, nombreyapellido, entidad } = req.body;
   try {
     const client = await getConnection();
     await client.query(
-      'INSERT INTO CuentaTransferencia (Alias, Cuit, NombreYApellido, Entidad) VALUES ($1, $2, $3, $4)',
-      [Alias, Cuit, NombreYApellido, Entidad]
+      'INSERT INTO CuentaTransferencia (alias, cuit, nombreyapellido, entidad) VALUES ($1, $2, $3, $4)',
+      [alias, cuit, nombreyapellido, entidad]
     );
     res.json({ message: 'Cuenta de transferencia agregada con éxito' });
   } catch (error) {
@@ -35,13 +35,13 @@ export const eliminarCuentaTransferencia = async (req, res) => {
 
 export const editarCuentaTransferencia = async (req, res) => {
   try {
-    const { Alias, Cuit, NombreYApellido, Entidad } = req.body;
+    const { alias, cuit, nombreyapellido, entidad } = req.body;
     const client = await getConnection();
     await client.query(
       `UPDATE CuentaTransferencia
-       SET Alias = $1, Cuit = $2, NombreYApellido = $3, Entidad = $4
-       WHERE ID = $5`,
-      [Alias, Cuit, NombreYApellido, Entidad, req.params.id]
+       SET alias = $1, cuit = $2, nombreyapellido = $3, entidad = $4
+       WHERE ID = $5`,  
+      [alias, cuit, nombreyapellido, entidad, req.params.id]
     );
     res.status(200).json({ message: 'Cuenta actualizada' });
   } catch (error) {
