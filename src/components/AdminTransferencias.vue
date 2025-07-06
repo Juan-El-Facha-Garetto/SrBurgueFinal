@@ -72,7 +72,7 @@ const agregarCuenta = async () => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(nueva.value)
   });
-  nueva.value = { Aalias: '', cuit: '', nombreyapellido: '', entidad: '' };
+  nueva.value = { alias: '', cuit: '', nombreyapellido: '', entidad: '' };
   cargarCuentas();
 };
 
