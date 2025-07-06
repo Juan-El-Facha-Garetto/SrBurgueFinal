@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cuenta in cuentas" :key="cuenta.ID">
+        <tr v-for="cuenta in cuentas" :key="cuenta.id">
           <td>{{ cuenta.alias }}</td>
           <td>{{ cuenta.cuit }}</td>
           <td>{{ cuenta.nombreyapellido }}</td>
