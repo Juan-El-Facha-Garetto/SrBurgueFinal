@@ -79,7 +79,7 @@ const agregarCuenta = async () => {
 const editarCuenta = (cuenta) => {
   nueva.value = { ...cuenta };
   editando.value = true;
-  editId.value = cuenta.ID;
+  editId.value = cuenta.id;
 };
 
 const guardarEdicion = async () => {

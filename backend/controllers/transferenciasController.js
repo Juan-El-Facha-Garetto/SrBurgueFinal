@@ -26,7 +26,7 @@ export const addCuentaTransferencia = async (req, res) => {
 export const eliminarCuentaTransferencia = async (req, res) => {
   try {
     const client = await getConnection();
-    await client.query('DELETE FROM CuentaTransferencia WHERE ID = $1', [req.params.id]);
+    await client.query('DELETE FROM CuentaTransferencia WHERE id = $1', [req.params.id]);
     res.status(200).json({ message: 'Cuenta eliminada' });
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar la cuenta' });
@@ -40,7 +40,7 @@ export const editarCuentaTransferencia = async (req, res) => {
     await client.query(
       `UPDATE CuentaTransferencia
        SET alias = $1, cuit = $2, nombreyapellido = $3, entidad = $4
-       WHERE ID = $5`,  
+       WHERE id = $5`,  
       [alias, cuit, nombreyapellido, entidad, req.params.id]
     );
     res.status(200).json({ message: 'Cuenta actualizada' });
