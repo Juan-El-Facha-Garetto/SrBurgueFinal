@@ -5,7 +5,7 @@
       <button
          v-for="cat in categorias"
             :key="cat.id"
-            @click="irAProductos(cat.ID)"
+            @click="irAProductos(cat.id)"
           >
         {{ cat.Seccion }} 
       </button>
@@ -27,7 +27,7 @@ import { useCartStore } from '@/stores/cart'
 // Componente para la página de inicio
 const user = JSON.parse(localStorage.getItem('user') || '{}')
 const esAdmin = user.rol === 'admin'
-
+const API_URL = process.env.VUE_APP_API_URL;
 const categorias = ref([]) 
 const router = useRouter()
 const cartStore = useCartStore()
@@ -35,7 +35,7 @@ const cartStore = useCartStore()
 const totalItems = computed(() => cartStore.items.reduce((sum, item) => sum + item.quantity, 0))
 
 onMounted(async () => {
-  const response = await fetch('https://srburguefinal.onrender.com/api/categorias')
+  const response = await fetch(`${API_URL}/api/categorias`)
   if (response.ok) {
     categorias.value = await response.json()
   } else {
