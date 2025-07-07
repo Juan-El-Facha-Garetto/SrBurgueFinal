@@ -7,7 +7,7 @@
             :key="cat.id"
             @click="irAProductos(cat.id)"
           >
-        {{ cat.Seccion }} 
+        {{ cat.seccion }} 
       </button>
       <div>
         <button v-if="esAdmin" @click="router.push('/admin')">Ir al panel de administrador</button>
