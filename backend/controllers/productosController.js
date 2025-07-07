@@ -5,15 +5,15 @@ export const getProductos = async (req, res) => {
         const client = await getConnection();
         const result = await client.query(`
             SELECT 
-                P.ID, 
-                P.ID_Categoria, 
-                P.Nombre, 
-                P.Descripcion, 
-                P.Precio, 
-                P.Foto,
-                C.Seccion AS CategoriaSeccion
-            FROM Producto P
-            LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
+                P.id, 
+                P.id_categoria, 
+                P.nombre, 
+                P.descripcion, 
+                P.precio, 
+                P.foto,
+                C.seccion AS categoriaseccion
+            FROM producto P
+            LEFT JOIN categoria C ON P.id_categoria = C.id
         `);
         res.json(result.rows);
     } catch (error) {
@@ -26,22 +26,28 @@ export const createProducto = async (req, res) => {
         console.log('Body:', req.body);
         console.log('File:', req.file);
 
-        const { ID_Categoria, Nombre, Descripcion, Precio } = req.body;
-        const Foto = req.file ? req.file.filename : null;
+        const { id_categoria, nombre, descripcion, precio } = req.body;
+        // Si el campo foto viene como string (por ejemplo, desde Postman), úsalo. Si viene como archivo, usa el filename
+        let foto = null;
+        if (req.file) {
+            foto = req.file.filename;
+        } else if (req.body.foto) {
+            foto = req.body.foto;
+        }
 
         const client = await getConnection();
         console.log('Conexión establecida');
 
         await client.query(
-            `INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Precio, Foto)
+            `INSERT INTO producto (id_categoria, nombre, descripcion, precio, foto)
              VALUES ($1, $2, $3, $4, $5)`,
-            [ID_Categoria, Nombre, Descripcion, Precio, Foto]
+            [id_categoria, nombre, descripcion, precio, foto]
         );
 
         res.status(201).json({ message: 'Producto creado' });
     } catch (error) {
         console.error('Error en createProducto:', error);
-        res.status(500).json({ error: 'Error al crear producto' });
+        res.status(500).json({ error: 'Error al crear producto', detalle: error.message });
     }
 };
 
@@ -51,16 +57,16 @@ export const getProductoById = async (req, res) => {
         const client = await getConnection();
         const result = await client.query(
             `SELECT 
-                P.ID, 
-                P.ID_Categoria, 
-                P.Nombre, 
-                P.Descripcion, 
-                P.Precio, 
-                P.Foto,
-                C.Seccion AS CategoriaSeccion
-            FROM Producto P
-            LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
-            WHERE P.ID = $1`,
+                P.id, 
+                P.id_categoria, 
+                P.nombre, 
+                P.descripcion, 
+                P.precio, 
+                P.foto,
+                C.seccion AS categoriaseccion
+            FROM producto P
+            LEFT JOIN categoria C ON P.id_categoria = C.id
+            WHERE P.id = $1`,
             [id]
         );
         if (result.rows.length === 0) {
@@ -78,7 +84,7 @@ export const deleteProducto = async (req, res) => {
         const { id } = req.params;
         console.log('Intentando eliminar producto con ID:', id);
         const client = await getConnection();
-        const result = await client.query('DELETE FROM Producto WHERE ID = $1', [id]);
+        const result = await client.query('DELETE FROM producto WHERE id = $1', [id]);
         console.log('Filas afectadas:', result.rowCount);
         res.json({ message: 'Producto eliminado' });
     } catch (error) {
@@ -90,19 +96,19 @@ export const deleteProducto = async (req, res) => {
 export const updateProducto = async (req, res) => {
     try {
         const { id } = req.params;
-        const { ID_Categoria, Nombre, Descripcion, Precio } = req.body;
-        let Foto = null;
+        const { id_categoria, nombre, descripcion, precio } = req.body;
+        let foto = null;
 
         if (req.file) {
-            Foto = req.file.filename;
-        } else if (req.body.Foto) {
-            Foto = req.body.Foto;
+            foto = req.file.filename;
+        } else if (req.body.foto) {
+            foto = req.body.foto;
         }
 
         const client = await getConnection();
         await client.query(
-            'UPDATE Producto SET ID_Categoria=$1, Nombre=$2, Descripcion=$3, Precio=$4, Foto=$5 WHERE ID=$6',
-            [ID_Categoria, Nombre, Descripcion, Precio, Foto, id]
+            'UPDATE producto SET id_categoria=$1, nombre=$2, descripcion=$3, precio=$4, foto=$5 WHERE id=$6',
+            [id_categoria, nombre, descripcion, precio, foto, id]
         );
         res.json({ message: 'Producto actualizado' });
     } catch (error) {
@@ -118,19 +124,19 @@ export const getProductosFiltrados = async (req, res) => {
     const client = await getConnection();
     let query = `
       SELECT 
-        P.ID, 
-        P.ID_Categoria, 
-        P.Nombre, 
-        P.Descripcion, 
-        P.Precio, 
-        P.Foto,
-        C.Seccion AS CategoriaSeccion
-      FROM Producto P
-      LEFT JOIN Categoria C ON P.ID_Categoria = C.ID
+        P.id, 
+        P.id_categoria, 
+        P.nombre, 
+        P.descripcion, 
+        P.precio, 
+        P.foto,
+        C.seccion AS categoriaseccion
+      FROM producto P
+      LEFT JOIN categoria C ON P.id_categoria = C.id
     `;
     let params = [];
     if (idCategoria) {
-      query += " WHERE P.ID_Categoria = $1";
+      query += " WHERE P.id_categoria = $1";
       params = [idCategoria];
     }
     const result = await client.query(query, params);
