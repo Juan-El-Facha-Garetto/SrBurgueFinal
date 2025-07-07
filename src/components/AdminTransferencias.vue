@@ -19,7 +19,7 @@
           <td>{{ cuenta.entidad }}</td>
           <td>
             <button @click="editarCuenta(cuenta)">Editar</button>
-            <button @click="eliminarCuenta(cuenta.ID)">Eliminar</button>
+            <button @click="eliminarCuenta(cuenta.id)">Eliminar</button>
           </td>
         </tr>
       </tbody>
