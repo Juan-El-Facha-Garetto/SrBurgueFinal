@@ -4,7 +4,7 @@
     <div class="botones">
       <button
          v-for="cat in categorias"
-            :key="cat.ID"
+            :key="cat.id"
             @click="irAProductos(cat.ID)"
           >
         {{ cat.Seccion }} 
