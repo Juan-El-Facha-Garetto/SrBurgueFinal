@@ -96,20 +96,21 @@ const confirmarCompra = async () => {
     alert('Selecciona un método de pago')
     return
   }
-  const ID_MetodosDePago = metodoSeleccionado.value === 'Efectivo' ? 1 : 2
+  const id_metodosdepago = metodoSeleccionado.value === 'Efectivo' ? 1 : 2
 
   // Obtiene el usuario logueado
   const usuario = JSON.parse(localStorage.getItem('user') || '{}')
-  const ID_Usuario = usuario.id
+  const id_usuario = usuario.id
 
   const pedido = {
-    ID_Usuario,
-    ID_MetodosDePago,
-    Total: totalPrice.value
+    id_usuario,
+    id_metodosdepago,
+    total: totalPrice.value
   }
 
   try {
-    const response = await fetch('http://localhost:3000/api/pedidos', {
+    const API_URL = process.env.VUE_APP_API_URL;
+    const response = await fetch(`${API_URL}/api/pedidos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(pedido)
@@ -123,25 +124,25 @@ const confirmarCompra = async () => {
         const precioFinal = item.CategoriaSeccion === 'Burguers' && item.medallonExtra
           ? Number(item.price) + 1500
           : Number(item.price);
-      await fetch('http://localhost:3000/api/pedidos/detallepedido', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ID_Pedido: pedidoId,
-          ID_Producto: item.id,
-          Cantidad: 1,
-          PrecioUnitario: precioFinal,
-          Subtotal: precioFinal,
-          Observaciones: (item.observaciones || '') + (item.CategoriaSeccion === 'Burguers' && item.medallonExtra ? ' + Medallón extra' : '')
-        })
-      });
-}
+        await fetch(`${API_URL}/api/pedidos/detallepedido`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id_pedido: pedidoId,
+            id_producto: item.id,
+            cantidad: 1,
+            preciounitario: precioFinal,
+            subtotal: precioFinal,
+            observaciones: (item.observaciones || '') + (item.CategoriaSeccion === 'Burguers' && item.medallonExtra ? ' + Medallón extra' : '')
+          })
+        });
+      }
 
       router.push({
         name: 'resumen-pedido',
         params: {
           id: pedidoId,
-          metodo: ID_MetodosDePago
+          metodo: id_metodosdepago
         }
       });
     } else {

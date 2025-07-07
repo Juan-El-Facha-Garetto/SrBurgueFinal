@@ -4,24 +4,24 @@
     <form @submit.prevent="submitProduct">
       <div class="form-group">
         <label for="categoria">Categoría:</label>
-        <select id="categoria" v-model="product.ID_Categoria" required>
+        <select id="categoria" v-model="product.id_categoria" required>
           <option value="" disabled>Seleccione una categoría</option>
-          <option v-for="cat in categorias" :key="cat.ID" :value="cat.ID">
-            {{ cat.Seccion }}
+          <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
+            {{ cat.seccion }}
           </option>
         </select>
       </div>
       <div class="form-group">
         <label for="name">Nombre:</label>
-        <input type="text" id="name" v-model="product.Nombre" required />
+        <input type="text" id="name" v-model="product.nombre" required />
       </div>
       <div class="form-group">
         <label for="description">Descripción:</label>
-        <textarea id="description" v-model="product.Descripcion" required></textarea>
+        <textarea id="description" v-model="product.descripcion" required></textarea>
       </div>
       <div class="form-group">
         <label for="price">Precio:</label>
-        <input type="number" id="price" v-model="product.Precio" required />
+        <input type="number" id="price" v-model="product.precio" required />
       </div>
       <div class="form-group">
         <label for="photo">Foto:</label>
@@ -39,6 +39,7 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 import { authFetch } from '@/helpers/authFetch'
+const API_URL = process.env.VUE_APP_API_URL;
 
 // Verificación de autenticación al montar el componente
 onMounted(() => {
@@ -52,30 +53,30 @@ onMounted(() => {
 
 const categorias = ref([])
 const product = ref({
-  ID_Categoria: '',
-  Nombre: '',
-  Descripcion: '',
-  Precio: null,
-  Foto: null,
+  id_categoria: '',
+  nombre: '',
+  descripcion: '',
+  precio: null,
+  foto: null,
 })
 
 const handleFileUpload = (event) => {
   const file = event.target.files[0]
-  product.value.Foto = file || null
+  product.value.foto = file || null
 }
 
 const submitProduct = async () => {
   try {
     const formData = new FormData();
-    formData.append('ID_Categoria', product.value.ID_Categoria);
-    formData.append('Nombre', product.value.Nombre);
-    formData.append('Descripcion', product.value.Descripcion);
-    formData.append('Precio', product.value.Precio);
-    if (product.value.Foto) {
-      formData.append('Foto', product.value.Foto);
+    formData.append('id_categoria', product.value.id_categoria);
+    formData.append('nombre', product.value.nombre);
+    formData.append('descripcion', product.value.descripcion);
+    formData.append('precio', product.value.precio);
+    if (product.value.foto) {
+      formData.append('foto', product.value.foto);
     }
 
-   const response = await authFetch('http://localhost:3000/api/productos', {
+   const response = await authFetch(`${API_URL}/api/productos`, {
       method: 'POST',
       body: formData
     });
@@ -91,7 +92,7 @@ const submitProduct = async () => {
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/categorias')
+    const response = await axios.get(`${API_URL}/api/categorias`)
     categorias.value = response.data
   } catch (error) {
     console.error('Error al obtener categorías:', error)

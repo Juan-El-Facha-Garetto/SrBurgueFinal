@@ -3,12 +3,12 @@ import { generarToken } from '../utils/jwt.js';
 
 export const agregarUsuario = async (req, res) => {
   try {
-    const { ID_Rol, Usuario, ClaveIngreso } = req.body;
+    const { id_rol, usuario, claveingreso } = req.body;
     const client = await getConnection();
     await client.query(
-      `INSERT INTO Usuario (ID_Rol, Usuario, ClaveIngreso)
+      `INSERT INTO usuario (id_rol, usuario, claveingreso)
        VALUES ($1, $2, $3)`,
-      [ID_Rol, Usuario, ClaveIngreso]
+      [id_rol, usuario, claveingreso]
     );
     res.status(201).json({ message: "Usuario creado correctamente" });
   } catch (error) {
@@ -19,13 +19,13 @@ export const agregarUsuario = async (req, res) => {
 
 export const loginUsuario = async (req, res) => {
   try {
-    const { Usuario, ClaveIngreso } = req.body;
+    const { usuario, claveingreso } = req.body;
     const client = await getConnection();
 
     // Buscar por nombre de usuario
     const result = await client.query(
-      'SELECT * FROM Usuario WHERE Usuario = $1',
-      [Usuario]
+      'SELECT * FROM usuario WHERE usuario = $1',
+      [usuario]
     );
 
     if (result.rows.length === 0) {
@@ -34,17 +34,17 @@ export const loginUsuario = async (req, res) => {
 
     const user = result.rows[0];
 
-    if (user.claveingreso !== ClaveIngreso) {
+    if (user.claveingreso !== claveingreso) {
       return res.status(401).json({ message: 'Contraseña incorrecta.' });
     }
 
-     const rol = user.id_rol === 1 ? 'admin' : 'usuario';
+    const rol = user.id_rol === 1 ? 'admin' : 'usuario';
 
     // Genera el token
     const token = generarToken({
-      ID: user.id,
+      id: user.id,
       rol,
-      Usuario: user.usuario
+      usuario: user.usuario
     });
 
     // Devuelve datos y token

@@ -38,8 +38,8 @@ const login = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        Usuario: username.value,
-        ClaveIngreso: password.value
+        usuario: username.value,
+        claveingreso: password.value
       })
     });
 

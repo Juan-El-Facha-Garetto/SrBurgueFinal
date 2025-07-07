@@ -43,8 +43,8 @@ onMounted(async () => {
   }
 })
 
-function irAProductos(idCategoria) {
-  router.push({ name: 'productos-categoria', params: { categoria: idCategoria } })
+function irAProductos(idcategoria) {
+  router.push({ name: 'productos-categoria', params: { categoria: idcategoria } })
 }
 
 function irAlCarrito() {

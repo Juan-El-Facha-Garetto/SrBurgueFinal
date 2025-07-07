@@ -14,17 +14,17 @@
         </tr>
       </thead>
       <tbody class="productos-lista">
-        <tr v-for="producto in productos" :key="producto.ID">
-          <td>{{ producto.Nombre }}</td>
-          <td>{{ producto.Descripcion }}</td>
-          <td>${{ producto.Precio }}</td>
-          <td>{{ producto.CategoriaSeccion }}</td> 
+        <tr v-for="producto in productos" :key="producto.id">
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.descripcion }}</td>
+          <td>${{ producto.precio }}</td>
+          <td>{{ producto.categoriaseccion }}</td> 
           <td>
-            <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" alt="Foto" width="70" />
+            <img v-if="producto.foto" :src="`${API_URL}/uploads/${producto.foto}`" alt="Foto" width="70" />
           </td>
           <td>
-            <button @click="editarProducto(producto.ID)">Editar</button>
-            <button @click="eliminarProducto(producto.ID)">Eliminar</button>
+            <button @click="editarProducto(producto.id)">Editar</button>
+            <button @click="eliminarProducto(producto.id)">Eliminar</button>
           </td>
         </tr>
       </tbody>
@@ -38,12 +38,13 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { authFetch } from '@/helpers/authFetch'
 
+const API_URL = process.env.VUE_APP_API_URL;
 const router = useRouter()
 const productos = ref([])
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/productos')
+    const response = await axios.get(`${API_URL}/api/productos`)
     productos.value = response.data
   } catch (error) {
     console.error('Error al obtener productos:', error)
@@ -56,10 +57,10 @@ const editarProducto = (id) => {
 const eliminarProducto = async (id) => {
   if (confirm('¿Seguro que deseas eliminar este producto?')) {
     try {
-     await authFetch(`http://localhost:3000/api/productos/${id}`, {
+     await authFetch(`${API_URL}/api/productos/${id}`, {
         method: 'DELETE'
       });
-      productos.value = productos.value.filter(producto => producto.ID !== id);
+      productos.value = productos.value.filter(producto => producto.id !== id);
       alert('Producto eliminado con éxito');
     } catch (error) {
       alert('Error al eliminar producto');

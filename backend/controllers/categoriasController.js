@@ -3,7 +3,7 @@ import { getConnection } from '../conexion.js';
 export const getCategorias = async (req, res) => {
     try {
         const client = await getConnection();
-        const result = await client.query('SELECT id, Seccion FROM Categoria');
+        const result = await client.query('SELECT id, seccion FROM categoria');
         res.json(result.rows);
     } catch (error) {
         console.error('Error en getCategorias:', error);
@@ -15,7 +15,7 @@ export const crearCategoria = async (req, res) => {
     try {
         const { seccion } = req.body;
         const client = await getConnection();
-        await client.query('INSERT INTO Categoria (Seccion) VALUES ($1)', [seccion]);
+        await client.query('INSERT INTO categoria (seccion) VALUES ($1)', [seccion]);
         res.status(201).json({ message: 'Categoría creada exitosamente' });
     } catch (error) {
         console.error('Error en crearCategoria:', error);
@@ -27,7 +27,7 @@ export const eliminarCategoria = async (req, res) => {
     try {
         const { id } = req.params;
         const client = await getConnection();
-        await client.query('DELETE FROM Categoria WHERE id = $1', [id]);
+        await client.query('DELETE FROM categoria WHERE id = $1', [id]);
         res.json({ message: 'Categoría eliminada correctamente' });
     } catch (error) {
         console.error('Error en eliminarCategoria:', error);
@@ -40,7 +40,7 @@ export const editarCategoria = async (req, res) => {
         const { id } = req.params;
         const { seccion } = req.body;
         const client = await getConnection();
-        await client.query('UPDATE Categoria SET Seccion = $1 WHERE id = $2', [seccion, id]);
+        await client.query('UPDATE categoria SET seccion = $1 WHERE id = $2', [seccion, id]);
         res.json({ message: 'Categoría actualizada correctamente' });
     } catch (error) {
         console.error('Error en editarCategoria:', error);

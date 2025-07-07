@@ -9,16 +9,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="cat in categorias" :key="cat.ID">
+        <tr v-for="cat in categorias" :key="cat.id">
           <td>
-            <input v-if="editando && editandoId === cat.ID" v-model="editandoSeccion" required />
-            <span v-else>{{ cat.Seccion }}</span>
+            <input v-if="editando && editandoId === cat.id" v-model="editandoSeccion" required />
+            <span v-else>{{ cat.seccion }}</span>
           </td>
           <td>
-            <button v-if="!editando || editandoId !== cat.ID" @click="empezarEdicion(cat)">Editar</button>
-            <button v-if="editando && editandoId === cat.ID" @click="guardarEdicion(cat)">Guardar</button>
-            <button v-if="editando && editandoId === cat.ID" @click="cancelarEdicion">Cancelar</button>
-            <button @click="eliminarCategoria(cat.ID)">Eliminar</button>
+            <button v-if="!editando || editandoId !== cat.id" @click="empezarEdicion(cat)">Editar</button>
+            <button v-if="editando && editandoId === cat.id" @click="guardarEdicion(cat)">Guardar</button>
+            <button v-if="editando && editandoId === cat.id" @click="cancelarEdicion">Cancelar</button>
+            <button @click="eliminarCategoria(cat.id)">Eliminar</button>
           </td>
         </tr>
       </tbody>
@@ -39,13 +39,13 @@ import { ref, onMounted } from 'vue'
 const seccion = ref('')
 const mensaje = ref('')
 const categorias = ref([])
-
+const API_URL = process.env.VUE_APP_API_URL;
 const editando = ref(false)
 const editandoId = ref(null)
 const editandoSeccion = ref('')
 
 const cargarCategorias = async () => {
-  const response = await fetch('http://localhost:3000/api/categorias')
+  const response = await fetch(`${API_URL}/api/categorias`)
   if (response.ok) {
     categorias.value = await response.json()
   }
@@ -56,11 +56,10 @@ const crearCategoria = async () => {
   if (!seccion.value) return
 
   const body = {
-    Seccion: seccion.value,
-    Detalle: null
+    seccion: seccion.value,
   }
 
-  const response = await fetch('http://localhost:3000/api/categorias', {
+  const response = await fetch(`${API_URL}/api/categorias`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -77,9 +76,9 @@ const crearCategoria = async () => {
 
 const empezarEdicion = (cat) => {
   editando.value = true
-  editandoId.value = cat.ID
-  editandoSeccion.value = cat.Seccion
-  seccion.value = cat.Seccion
+  editandoId.value = cat.id
+  editandoSeccion.value = cat.seccion
+  seccion.value = cat.seccion
 }
 
 const cancelarEdicion = () => {
@@ -92,10 +91,9 @@ const cancelarEdicion = () => {
 const guardarEdicion = async () => {
   if (!editandoSeccion.value) return
   const body = {
-    Seccion: editandoSeccion.value,
-    Detalle: null
+    seccion: editandoSeccion.value,
   }
-  const response = await fetch(`http://localhost:3000/api/categorias/${editandoId.value}`, {
+  const response = await fetch(`${API_URL}/api/categorias/${editandoId.value}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -111,7 +109,7 @@ const guardarEdicion = async () => {
 
 const eliminarCategoria = async (id) => {
   if (!confirm('¿Seguro que deseas eliminar esta categoría?')) return
-  const response = await fetch(`http://localhost:3000/api/categorias/${id}`, {
+  const response = await fetch(`${API_URL}/api/categorias/${id}`, {
     method: 'DELETE'
   })
   if (response.ok) {

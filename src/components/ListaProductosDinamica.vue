@@ -6,16 +6,16 @@
     <VolverHomeButton />
     <div v-if="mensaje" class="notificacion">{{ mensaje }}</div>
   <div class="lista-productos">
-   <h2 v-if="productos.length">Productos de {{ productos[0].CategoriaSeccion }}</h2>
+   <h2 v-if="productos.length">Productos de {{ productos[0].categoriaseccion }}</h2>
     <h2 v-else>Productos</h2>
     <ul v-if="productos.length">
-      <li v-for="producto in productos" :key="producto.ID">
-        <img v-if="producto.Foto" :src="`http://localhost:3000/uploads/${producto.Foto}`" :alt="producto.Nombre"/>
-        <h3>{{ producto.Nombre }}</h3>
-        <p class="descripcion">{{ producto.Descripcion }}</p>
-        <p class="precio">Precio: ${{ producto.Precio }}</p>
+      <li v-for="producto in productos" :key="producto.id">
+        <img v-if="producto.foto" :src="`${API_URL}/uploads/${producto.foto}`" :alt="producto.nombre"/>
+        <h3>{{ producto.nombre }}</h3>
+        <p class="descripcion">{{ producto.descripcion }}</p>
+        <p class="precio">Precio: ${{ producto.precio }}</p>
 
-        <input type="number" min="1" v-model.number="cantidades[producto.ID]" style="width: 60px; margin-right: 8px;"/>
+        <input type="number" min="1" v-model.number="cantidades[producto.id]" style="width: 60px; margin-right: 8px;"/>
 
         <button @click="agregar(producto)">Agregar al carrito</button>
       </li>
@@ -44,27 +44,28 @@ const cantidades = ref({}) // NUEVO
 function addToCartMultiple(producto, cantidad) {
   for (let i = 0; i < cantidad; i++) {
     cart.value.push({
-      id: producto.ID,
-      name: producto.Nombre,
-      description: producto.Descripcion,
-      price: producto.Precio,
-      image: producto.Foto,
-      CategoriaSeccion: producto.CategoriaSeccion,
+      id: producto.id,
+      name: producto.nombre,
+      description: producto.descripcion,
+      price: producto.precio,
+      image: producto.foto,
+      categoriaseccion: producto.categoriaseccion,
       observaciones: '' // Cada unidad con su observación individual
     })
   }
 }
 
 const agregar = (producto) => {
-  const cantidad = cantidades.value[producto.ID] || 1
+  const cantidad = cantidades.value[producto.id] || 1
   addToCartMultiple(producto, cantidad)
-  cantidades.value[producto.ID] = 1
-  mensaje.value = `¡${cantidad} ${producto.Nombre}${cantidad > 1 ? 's' : ''} agregado${cantidad > 1 ? 's' : ''} al carrito!`
+  cantidades.value[producto.id] = 1
+  mensaje.value = `¡${cantidad} ${producto.nombre}${cantidad > 1 ? 's' : ''} agregado${cantidad > 1 ? 's' : ''} al carrito!`
   setTimeout(() => mensaje.value = '', 1800)
 }
 
+const API_URL = process.env.VUE_APP_API_URL;
 async function cargarProductos() {
-  const response = await fetch(`http://localhost:3000/api/productos/filtrados?idCategoria=${categoria.value}`)
+  const response = await fetch(`${API_URL}/api/productos/filtrados?idCategoria=${categoria.value}`)
   if (response.ok) {
     productos.value = await response.json()
   } else {

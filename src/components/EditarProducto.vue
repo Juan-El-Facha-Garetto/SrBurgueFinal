@@ -4,30 +4,30 @@
     <form @submit.prevent="submitProduct">
       <div class="form-group">
         <label for="categoria">Categoría:</label>
-        <select id="categoria" v-model="product.ID_Categoria" required>
+        <select id="categoria" v-model="product.id_categoria" required>
           <option value="" disabled>Seleccione una categoría</option>
-          <option v-for="cat in categorias" :key="cat.ID" :value="cat.ID">
-            {{ cat.Seccion }} - {{ cat.Detalle }}
+          <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
+            {{ cat.seccion }} - {{ cat.detalle }}
           </option>
         </select>
       </div>
       <div class="form-group">
         <label for="name">Nombre:</label>
-        <input type="text" id="name" v-model="product.Nombre" required />
+        <input type="text" id="name" v-model="product.nombre" required />
       </div>
       <div class="form-group">
         <label for="description">Descripción:</label>
-        <textarea id="description" v-model="product.Descripcion" required></textarea>
+        <textarea id="description" v-model="product.descripcion" required></textarea>
       </div>
       <div class="form-group">
         <label for="price">Precio:</label>
-        <input type="number" id="price" v-model="product.Precio" required />
+        <input type="number" id="price" v-model="product.precio" required />
       </div>
       <div class="form-group">
         <label for="photo">Foto:</label>
         <input type="file" id="photo" @change="handleFileUpload" />
-        <div v-if="product.Foto && typeof product.Foto === 'string'">
-          <img :src="`http://localhost:3000/uploads/${product.Foto}`" alt="Foto actual" 
+        <div v-if="product.foto && typeof product.foto === 'string'">
+          <img :src="`${API_URL}/uploads/${product.foto}`" alt="Foto actual" 
           class="img-preview"/>
         </div>
       </div>
@@ -47,45 +47,46 @@ const route = useRoute()
 const router = useRouter()
 const productId = route.params.id
 
+const API_URL = process.env.VUE_APP_API_URL;
 const categorias = ref([])
 const product = ref({
-  ID_Categoria: '',
-  Nombre: '',
-  Descripcion: '',
-  Precio: null,
-  Foto: null,
+  id_categoria: '',
+  nombre: '',
+  descripcion: '',
+  precio: null,
+  foto: null,
 })
 
 const handleFileUpload = (event) => {
   const file = event.target.files[0]
-  product.value.Foto = file || null
+  product.value.foto = file || null
 }
 
 const loadCategorias = async () => {
-  const response = await axios.get('http://localhost:3000/api/categorias')
+  const response = await axios.get(`${API_URL}/api/categorias`)
   categorias.value = response.data
 }
 
 const loadProduct = async () => {
-  const response = await axios.get(`http://localhost:3000/api/productos/${productId}`)
+  const response = await axios.get(`${API_URL}/api/productos/${productId}`)
   product.value = response.data
 }
 
 const submitProduct = async () => {
   try {
     const formData = new FormData()
-    formData.append('ID_Categoria', product.value.ID_Categoria)
-    formData.append('Nombre', product.value.Nombre)
-    formData.append('Descripcion', product.value.Descripcion)
-    formData.append('Precio', product.value.Precio)
+    formData.append('id_categoria', product.value.id_categoria)
+    formData.append('nombre', product.value.nombre)
+    formData.append('descripcion', product.value.descripcion)
+    formData.append('precio', product.value.precio)
     // Si se subió una nueva foto, la enviamos
-    if (product.value.Foto instanceof File) {
-      formData.append('Foto', product.value.Foto)
-    } else if (typeof product.value.Foto === 'string') {
-      formData.append('Foto', product.value.Foto)
+    if (product.value.foto instanceof File) {
+      formData.append('foto', product.value.foto)
+    } else if (typeof product.value.foto === 'string') {
+      formData.append('foto', product.value.foto)
     }
 
-   const response = await authFetch(`http://localhost:3000/api/productos/${productId}`, {
+   const response = await authFetch(`${API_URL}/api/productos/${productId}`, {
       method: 'PUT',
       body: formData
     })

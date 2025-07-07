@@ -53,12 +53,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="detalle in detalles" :key="detalle.ID">
-          <td>{{ detalle.Cantidad }}</td>
-          <td>{{ detalle.NombreProducto }}</td>
-          <td>{{ detalle.PrecioUnitario }}</td>
-          <td>{{ detalle.Observaciones }}</td>
-          <td>{{ detalle.Subtotal }}</td>
+        <tr v-for="detalle in detalles" :key="detalle.id">
+          <td>{{ detalle.cantidad }}</td>
+          <td>{{ detalle.nombreproducto }}</td>
+          <td>{{ detalle.preciounitario }}</td>
+          <td>{{ detalle.observaciones }}</td>
+          <td>{{ detalle.subtotal }}</td>
         </tr>
       </tbody>
     </table>
@@ -140,10 +140,10 @@ const enviarPorWhatsapp = () => {
 
   mensaje += `*Detalle del pedido:*\n`;
   detalles.value.forEach(detalle => {
-  mensaje += `- ${detalle.NombreProducto} x${detalle.Cantidad} ($${detalle.Subtotal})`;
-  if (detalle.Observaciones) mensaje += ` [Obs: ${detalle.Observaciones}]`;
-  mensaje += '\n';
-}); 
+    mensaje += `- ${detalle.nombreproducto} x${detalle.cantidad} ($${detalle.subtotal})`;
+    if (detalle.observaciones) mensaje += ` [Obs: ${detalle.observaciones}]`;
+    mensaje += '\n';
+  }); 
   
   mensaje += `\n_*Total: $${total.value}*_\n`;
 
@@ -158,16 +158,17 @@ const enviarPorWhatsapp = () => {
 
 onMounted(async () => {
   // Trae los detalles del pedido
-   const res = await fetch(`http://localhost:3000/api/pedidos/detallepedido/${pedidoId}`);
+   const API_URL = process.env.VUE_APP_API_URL;
+   const res = await fetch(`${API_URL}/api/pedidos/detallepedido/${pedidoId}`);
   if (res.ok) {
     detalles.value = await res.json();
     console.log('Detalles recibidos:', detalles.value); // AGREGA ESTA LÍNEA
     console.log('Pedido ID:', pedidoId);
-    total.value = detalles.value.reduce((sum, d) => sum + (d.PrecioUnitario * d.Cantidad), 0);
+    total.value = detalles.value.reduce((sum, d) => sum + (d.preciounitario * d.cantidad), 0);
   }
   // Trae los datos de transferencia solo si corresponde
   if (metodo === 2) {
-    const resCuentas = await fetch('http://localhost:3000/api/transferencias');
+    const resCuentas = await fetch(`${API_URL}/api/transferencias`);
     if (resCuentas.ok) {
       cuentasTransferencia.value = await resCuentas.json();
     }
