@@ -40,6 +40,7 @@ export const getDetallePedido = async (req, res) => {
       [id]
     );
     console.log('Filas encontradas:', result.rows.length);
+    console.log('Contenido de result.rows:', result.rows);
     if (result.rows.length === 0) {
       console.log('No se encontraron detalles para el pedido con id:', id);
     }
