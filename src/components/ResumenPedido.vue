@@ -103,7 +103,7 @@ const enviarPorWhatsapp = () => {
 
   errorenvio.value = '';
 
-  if (!nombreEntrega.value.trim()) {
+  if (!nombreentrega.value.trim()) {
     alert('Por favor, ingresa tu nombre antes de enviar el pedido.');
     return;
   }
@@ -117,7 +117,7 @@ const enviarPorWhatsapp = () => {
 
   let mensaje = `*SR Burgues*\n\n*Pedido* #${pedidoid}\n`;
 
-  mensaje += `*A nombre de:* ${nombreEntrega.value}\n\n`; 
+  mensaje += `*A nombre de:* ${nombreentrega.value}\n\n`; 
   mensaje += `*Forma de entrega:* ${formaentrega.value === 'retiro' ? 'Retiro en sucursal' : 'Envío'}\n`;
   
   if (formaentrega.value === 'envio') {
