@@ -2,7 +2,7 @@ import { getConnection } from '../conexion.js'
 
 export async function crearPedido(req, res) {
   console.log('BODY:', req.body);
-  const { id_usuario, id_metodosdepago, total } = req.body;
+  const { id_metodosdepago, total } = req.body;
   const fecha = new Date();
   const fechaSQL = fecha.toISOString().slice(0, 10);
   const horaSQL = fecha.toTimeString().slice(0, 8);
@@ -10,10 +10,10 @@ export async function crearPedido(req, res) {
   try {
     const client = await getConnection();
     const result = await client.query(
-      `INSERT INTO pedido (id_usuario, id_metodosdepago, fecha, hora, total)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO pedido (id_metodosdepago, fecha, hora, total)
+       VALUES ($1, $2, $3, $4)
        RETURNING id`,
-      [id_usuario, id_metodosdepago, fechaSQL, horaSQL, total]
+      [id_metodosdepago, fechaSQL, horaSQL, total]
     );
     const pedidoId = result.rows[0].id;
     res.status(201).json({ message: 'Pedido guardado correctamente', id: pedidoId });

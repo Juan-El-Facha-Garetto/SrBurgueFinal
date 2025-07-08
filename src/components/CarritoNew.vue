@@ -98,12 +98,8 @@ const confirmarCompra = async () => {
   }
   const id_metodosdepago = metodoSeleccionado.value === 'Efectivo' ? 1 : 2
 
-  // Obtiene el usuario logueado
-  const usuario = JSON.parse(localStorage.getItem('user') || '{}')
-  const id_usuario = usuario.id
-
+  // Ya no se usa usuario
   const pedido = {
-    id_usuario,
     id_metodosdepago,
     total: totalPrice.value
   }
