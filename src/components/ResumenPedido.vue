@@ -158,11 +158,11 @@ const enviarPorWhatsapp = () => {
 
 onMounted(async () => {
   // Trae los detalles del pedido
-   const API_URL = process.env.VUE_APP_API_URL;
-   const res = await fetch(`${API_URL}/api/pedidos/detallepedido/${pedidoid}`);
+  const API_URL = process.env.VUE_APP_API_URL;
+  const res = await fetch(`${API_URL}/api/pedidos/detallepedido/${pedidoid}`);
   if (res.ok) {
     detalles.value = await res.json();
-    console.log('Detalles recibidos:', detalles.value); // AGREGA ESTA LÍNEA
+    console.log('Detalles recibidos:', detalles.value);
     console.log('Pedido ID:', pedidoid);
     total.value = detalles.value.reduce((sum, d) => sum + (d.preciounitario * d.cantidad), 0);
   }

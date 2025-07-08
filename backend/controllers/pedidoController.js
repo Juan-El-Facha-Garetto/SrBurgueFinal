@@ -44,7 +44,14 @@ export const getDetallePedido = async (req, res) => {
     if (result.rows.length === 0) {
       console.log('No se encontraron detalles para el pedido con id:', id);
     }
-    res.json(result.rows);
+    // Normalizar campo foto: si es null, devolver string vacío
+    const normalizados = result.rows.map(row => {
+      if (row.foto === null || row.foto === undefined) {
+        return { ...row, foto: '' };
+      }
+      return row;
+    });
+    res.json(normalizados);
   } catch (error) {
     console.error('Error al obtener el detalle del pedido:', error.message, error.stack);
     res.status(500).json({ error: 'Error al obtener el detalle del pedido', detalle: error.message });
