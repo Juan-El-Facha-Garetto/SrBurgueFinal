@@ -5,7 +5,7 @@
 
         <ul>
             <li v-for="(item, idx) in cart" :key="idx">
-              <img :src="`http://localhost:3000/uploads/${item.image}`" :alt="item.name"/>
+              <img :src="`${API_URL}/uploads/${item.image}`" :alt="item.name"/>
               <h3 class="nombre-producto">{{ item.name }}</h3>
               <p class="descripcion">Descripcion: {{ item.description }}</p>
               <p class="precio">Precio unitario: ${{ item.price }}</p>
@@ -56,7 +56,7 @@ import { ref, computed, defineProps, defineEmits} from 'vue'
 import VolverHomeButton from './VolverHomeButton.vue'
 import { useRouter } from 'vue-router'
 
-
+const API_URL = process.env.VUE_APP_API_URL;
 const router = useRouter()
 const emit = defineEmits(['remove-from-cart', 'clear-cart'])
 const props = defineProps({
