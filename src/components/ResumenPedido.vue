@@ -5,21 +5,21 @@
 
      <div class="nombre-entrega">
         <label><strong>A nombre de:</strong></label>
-        <input v-model="nombreEntrega" required placeholder="Ej: Juan Pérez" />
+        <input v-model="nombreentrega" required placeholder="Ej: Juan Pérez" />
       </div>
 
     <!-- Selección de forma de entrega -->
     <div class="formas-entrega">
       <button
-        :class="{ seleccionado: formaEntrega === 'retiro' }"
-        @click="formaEntrega = 'retiro'"
+        :class="{ seleccionado: formaentrega === 'retiro' }"
+        @click="formaentrega = 'retiro'"
         type="button"
       >
         Retiro en sucursal
       </button>
       <button
-        :class="{ seleccionado: formaEntrega === 'envio' }"
-        @click="formaEntrega = 'envio'"
+        :class="{ seleccionado: formaentrega === 'envio' }"
+        @click="formaentrega = 'envio'"
         type="button"
       >
         Envío
@@ -29,10 +29,10 @@
     <!-- Formulario solo si elige envío -->
     <form class="formulario-envio"
       v-if="formaEntrega === 'envio'"
-      @submit.prevent="guardarDatosEnvio">
+      @submit.prevent="guardardatosenvio">
       <div style="margin-bottom: 10px;">
         <label><strong>Dirección de entrega:</strong></label>
-        <input v-model="direccionEntrega" required placeholder="Ej: Calle 123" />
+        <input v-model="direccionentrega" required placeholder="Ej: Calle 123" />
       </div>
       <div style="margin-bottom: 10px;">
         <label><strong>Ciudad:</strong></label>
@@ -81,18 +81,18 @@ import VolverHomeButton from './VolverHomeButton.vue';
 
 const route = useRoute();
 const router = useRouter();
-const pedidoId = route.params.id;
+const pedidoid = route.params.id;
 const metodo = Number(route.params.metodo);
 
 const detalles = ref([]);
 const total = ref(0);
-const cuentasTransferencia = ref([]);
+const cuentastransferencia = ref([]);
 
-const formaEntrega = ref('retiro');
-const direccionEntrega = ref('');
-const nombreEntrega = ref('');
+const formaentrega = ref('retiro');
+const direccionentrega = ref('');
+const nombreentrega = ref('');
 const ciudad = ref('');
-const errorEnvio = ref('');
+const errorenvio = ref('');
 
 const volverAlCarrito = () => {
   router.push({ name: 'Carrito' });
@@ -101,7 +101,7 @@ const volverAlCarrito = () => {
 
 const enviarPorWhatsapp = () => {
 
-  errorEnvio.value = '';
+  errorenvio.value = '';
 
   if (!nombreEntrega.value.trim()) {
     alert('Por favor, ingresa tu nombre antes de enviar el pedido.');
@@ -115,13 +115,13 @@ const enviarPorWhatsapp = () => {
     return;
   }
 
-  let mensaje = `*SR Burgues*\n\n*Pedido* #${pedidoId}\n`;
+  let mensaje = `*SR Burgues*\n\n*Pedido* #${pedidoid}\n`;
 
   mensaje += `*A nombre de:* ${nombreEntrega.value}\n\n`; 
-  mensaje += `*Forma de entrega:* ${formaEntrega.value === 'retiro' ? 'Retiro en sucursal' : 'Envío'}\n`;
+  mensaje += `*Forma de entrega:* ${formaentrega.value === 'retiro' ? 'Retiro en sucursal' : 'Envío'}\n`;
   
-  if (formaEntrega.value === 'envio') {
-    mensaje += `*Dirección de entrega*: ${direccionEntrega.value}\n`;
+  if (formaentrega.value === 'envio') {
+    mensaje += `*Dirección de entrega*: ${direccionentrega.value}\n`;
     mensaje += `*Ciudad:* ${ciudad.value}\n\n`;
   } else {
     mensaje += `*Sucursal:* Av. 9 De Julio 1851, San Francisco\n\n`;
@@ -130,12 +130,12 @@ const enviarPorWhatsapp = () => {
   mensaje += `*Método de pago:* ${metodo === 1 ? 'Efectivo' : 'Transferencia'}\n\n`;
 
   // Agregar datos de transferencia si corresponde
-  if (metodo === 2 && cuentasTransferencia.value.length > 0) {
-    const cuenta = cuentasTransferencia.value[0]; // Puedes elegir la cuenta que prefieras
+  if (metodo === 2 && cuentastransferencia.value.length > 0) {
+    const cuenta = cuentastransferencia.value[0]; // Puedes elegir la cuenta que prefieras
     mensaje += `*Datos para Transferencia:*\n`;
-    mensaje += `Alias: _*${cuenta.Alias}*_\n`;
-    mensaje += `Titular: _*${cuenta.NombreYApellido}*_\n`;
-    mensaje += `Banco: _*${cuenta.Entidad}*_\n\n`;
+    mensaje += `Alias: _*${cuenta.alias}*_\n`;
+    mensaje += `Titular: _*${cuenta.nombreyapellido}*_\n`;
+    mensaje += `Banco: _*${cuenta.entidad}*_\n\n`;
   }
 
   mensaje += `*Detalle del pedido:*\n`;
@@ -159,18 +159,18 @@ const enviarPorWhatsapp = () => {
 onMounted(async () => {
   // Trae los detalles del pedido
    const API_URL = process.env.VUE_APP_API_URL;
-   const res = await fetch(`${API_URL}/api/pedidos/detallepedido/${pedidoId}`);
+   const res = await fetch(`${API_URL}/api/pedidos/detallepedido/${pedidoid}`);
   if (res.ok) {
     detalles.value = await res.json();
     console.log('Detalles recibidos:', detalles.value); // AGREGA ESTA LÍNEA
-    console.log('Pedido ID:', pedidoId);
+    console.log('Pedido ID:', pedidoid);
     total.value = detalles.value.reduce((sum, d) => sum + (d.preciounitario * d.cantidad), 0);
   }
   // Trae los datos de transferencia solo si corresponde
   if (metodo === 2) {
     const resCuentas = await fetch(`${API_URL}/api/transferencias`);
     if (resCuentas.ok) {
-      cuentasTransferencia.value = await resCuentas.json();
+      cuentastransferencia.value = await resCuentas.json();
     }
   }
 });
