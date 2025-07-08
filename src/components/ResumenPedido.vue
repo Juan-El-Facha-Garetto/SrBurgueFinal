@@ -28,7 +28,7 @@
 
     <!-- Formulario solo si elige envío -->
     <form class="formulario-envio"
-      v-if="formaEntrega === 'envio'"
+      v-if="formaentrega === 'envio'"
       @submit.prevent="guardardatosenvio">
       <div style="margin-bottom: 10px;">
         <label><strong>Dirección de entrega:</strong></label>
@@ -38,7 +38,7 @@
         <label><strong>Ciudad:</strong></label>
         <input v-model="ciudad" required placeholder="Ej: San Francisco" />
       </div> 
-      <div v-if="errorEnvio" style="color: red; margin-top: 5px;">{{ errorEnvio }}</div>
+      <div v-if="errorenvio" style="color: red; margin-top: 5px;">{{ errorenvio }}</div>
     </form>
 
     <h3>Detalle del pedido</h3>
@@ -108,8 +108,8 @@ const enviarPorWhatsapp = () => {
     return;
   }
   if (
-    formaEntrega.value === 'envio' &&
-    (!direccionEntrega.value.trim() || !ciudad.value.trim())
+    formaentrega.value === 'envio' &&
+    (!direccionentrega.value.trim() || !ciudad.value.trim())
   ) {
     alert('Por favor, completa la dirección y la ciudad para el envío.');
     return;
