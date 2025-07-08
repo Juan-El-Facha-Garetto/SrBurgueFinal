@@ -24,7 +24,12 @@ export async function crearPedido(req, res) {
 }
 
 export const getDetallePedido = async (req, res) => {
-  const { id } = req.params;
+  let { id } = req.params;
+  console.log('Obteniendo detalle de pedido para id:', id);
+  // Forzar a número si es posible
+  if (!isNaN(id)) {
+    id = Number(id);
+  }
   try {
     const client = await getConnection();
     const result = await client.query(
@@ -34,10 +39,14 @@ export const getDetallePedido = async (req, res) => {
        WHERE dp.id_pedido = $1`,
       [id]
     );
+    console.log('Filas encontradas:', result.rows.length);
+    if (result.rows.length === 0) {
+      console.log('No se encontraron detalles para el pedido con id:', id);
+    }
     res.json(result.rows);
   } catch (error) {
-    console.error('Error al obtener el detalle del pedido:', error);
-    res.status(500).json({ error: 'Error al obtener el detalle del pedido' });
+    console.error('Error al obtener el detalle del pedido:', error.message, error.stack);
+    res.status(500).json({ error: 'Error al obtener el detalle del pedido', detalle: error.message });
   }
 };
 
