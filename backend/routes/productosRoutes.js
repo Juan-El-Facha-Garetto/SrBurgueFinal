@@ -16,8 +16,8 @@ router.get('/', getProductos);
 router.get('/filtrados', getProductosFiltrados);
 router.get('/:id', getProductoById);
 
-router.post('/',requireAuth, upload.single('Foto'), createProducto);
-router.put('/:id',requireAuth, upload.single('Foto'), updateProducto);
+router.post('/',requireAuth, upload.single('foto'), createProducto);
+router.put('/:id',requireAuth, upload.single('foto'), updateProducto);
 router.delete('/:id',requireAuth, deleteProducto);
 
 export default router;
