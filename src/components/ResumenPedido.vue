@@ -42,26 +42,21 @@
     </form>
 
     <h3>Detalle del pedido</h3>
-    <table class="tabla-detalles">
-      <thead>
-        <tr>
-          <th>Cantidad</th>
-          <th>Producto</th>
-          <th>Precio unitario</th>
-          <th>Observaciones</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="detalle in detalles" :key="detalle.id">
-          <td>{{ detalle.cantidad }}</td>
-          <td>{{ detalle.nombreproducto }}</td>
-          <td>${{ detalle.preciounitario }}</td>
-          <td>{{ detalle.observaciones || 'Sin observaciones'}}</td>
-          <td>{{ detalle.subtotal }}</td>
-        </tr>
-      </tbody>
-    </table>
+
+
+      <div class="detalles-mobile">
+        <div v-for="detalle in detalles" :key="detalle.id" class="detalle-card">
+          <div class="detalle-header">
+            <h4>{{ detalle.nombreproducto }}</h4>
+            <span class="cantidad-badge">x{{ detalle.cantidad }}</span>
+          </div>
+          <div class="detalle-info">
+            <p><strong>Precio unitario:</strong> ${{ detalle.preciounitario }}</p>
+            <p><strong>Observaciones:</strong> {{ detalle.observaciones || 'Sin observaciones' }}</p>
+            <p class="subtotal"><strong>Subtotal: ${{ detalle.subtotal }}</strong></p>
+          </div>
+        </div>
+      </div>
     <p class="precio"><strong>Total: ${{ total }}</strong></p>
 
     <button
@@ -303,5 +298,83 @@ onMounted(async () => {
   transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+/* AGREGAR AL FINAL DEL CSS */
 
+/* Cards móviles para detalles */
+.detalles-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.detalle-card {
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.detalle-header h4 {
+  margin: 0;
+  font-family: 'Georgia', serif;
+  font-size: 18px;
+  color: #333;
+}
+
+.cantidad-badge {
+  background: var(--secondary-color);
+  color: black;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.detalle-info p {
+  margin: 5px 0;
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  color: #555;
+}
+
+.subtotal {
+  font-size: 16px !important;
+  color: black !important;
+  font-weight: bold;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+  margin-top: 10px !important;
+}
+
+
+@media (max-width: 768px) {
+  .resumen-pedido {
+    padding: 10px;
+    margin: 10px;
+  }
+  
+  .formas-entrega {
+    flex-direction: column;
+  }
+  
+  .formas-entrega button {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .detalle-header h4 {
+    font-size: 16px;
+  }
+}
 </style>
