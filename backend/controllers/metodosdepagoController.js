@@ -1,11 +1,15 @@
 import { getConnection } from '../conexion.js';
 
 export const getMetodosDePago = async (req, res) => {
+    const client = await getConnection(); 
     try {
-        const pool = await getConnection();
-        const result = await pool.request().query('SELECT * FROM MetodosDePago');
-        res.json(result.recordset);
+        
+        const result = await client.query('SELECT * FROM metodosdepago');
+        res.json(result.rows); 
     } catch (error) {
+        console.error('Error en getMetodosDePago:', error);
         res.status(500).json({ error: 'Error al obtener métodos de pago' });
+    } finally {
+        client.release(); 
     }
 };

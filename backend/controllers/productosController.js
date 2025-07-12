@@ -1,8 +1,8 @@
 import { getConnection } from '../conexion.js';
 
 export const getProductos = async (req, res) => {
+    const client = await getConnection();
     try {
-        const client = await getConnection();
         const result = await client.query(`
             SELECT 
                 P.id, 
@@ -19,9 +19,13 @@ export const getProductos = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener productos' });
     }
+    finally{
+        client.release();
+    }
 };
 
 export const createProducto = async (req, res) => {
+    const client = await getConnection();
     try {
         console.log('Body:', req.body);
         console.log('File:', req.file);
@@ -35,9 +39,6 @@ export const createProducto = async (req, res) => {
             foto = req.body.foto;
         }
 
-        const client = await getConnection();
-        console.log('Conexión establecida');
-
         await client.query(
             `INSERT INTO producto (id_categoria, nombre, descripcion, precio, foto)
              VALUES ($1, $2, $3, $4, $5)`,
@@ -49,12 +50,15 @@ export const createProducto = async (req, res) => {
         console.error('Error en createProducto:', error);
         res.status(500).json({ error: 'Error al crear producto', detalle: error.message });
     }
+     finally{
+        client.release();
+    }
 };
 
 export const getProductoById = async (req, res) => {
+    const client = await getConnection();
     try {
         const { id } = req.params;
-        const client = await getConnection();
         const result = await client.query(
             `SELECT 
                 P.id, 
@@ -77,13 +81,16 @@ export const getProductoById = async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Error al obtener producto' });
     }
+    finally{
+        client.release();
+    }
 };
 
 export const deleteProducto = async (req, res) => {
+     const client = await getConnection();
     try {
         const { id } = req.params;
         console.log('Intentando eliminar producto con ID:', id);
-        const client = await getConnection();
         const result = await client.query('DELETE FROM producto WHERE id = $1', [id]);
         console.log('Filas afectadas:', result.rowCount);
         res.json({ message: 'Producto eliminado' });
@@ -91,9 +98,13 @@ export const deleteProducto = async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Error al eliminar producto' });
     }
+    finally{
+        client.release();
+    }
 };
 
 export const updateProducto = async (req, res) => {
+    const client = await getConnection();
     try {
         const { id } = req.params;
         const { id_categoria, nombre, descripcion, precio } = req.body;
@@ -104,8 +115,6 @@ export const updateProducto = async (req, res) => {
         } else if (req.body.foto) {
             foto = req.body.foto;
         }
-
-        const client = await getConnection();
         await client.query(
             'UPDATE producto SET id_categoria=$1, nombre=$2, descripcion=$3, precio=$4, foto=$5 WHERE id=$6',
             [id_categoria, nombre, descripcion, precio, foto, id]
@@ -114,14 +123,18 @@ export const updateProducto = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al actualizar producto' });
+    }finally{
+        client.release();
     }
+    
 };
 
 export const getProductosFiltrados = async (req, res) => {
+const client = await getConnection();
   try {
     console.log('consulta recibida:', req.query);
     const { idCategoria } = req.query;
-    const client = await getConnection();
+    
     let query = `
       SELECT 
         P.id, 
@@ -145,4 +158,7 @@ export const getProductosFiltrados = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener productos' });
   }
+  finally{
+        client.release();
+    }
 };

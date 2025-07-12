@@ -1,27 +1,10 @@
 import { getConnection } from '../conexion.js';
 import { generarToken } from '../utils/jwt.js';
 
-export const agregarUsuario = async (req, res) => {
-  try {
-    const { id_rol, usuario, claveingreso } = req.body;
-    const client = await getConnection();
-    await client.query(
-      `INSERT INTO usuario (id_rol, usuario, claveingreso)
-       VALUES ($1, $2, $3)`,
-      [id_rol, usuario, claveingreso]
-    );
-    res.status(201).json({ message: "Usuario creado correctamente" });
-  } catch (error) {
-    console.error("Error al crear usuario:", error);
-    res.status(500).json({ message: "Error al crear usuario", error: error.message });
-  }
-};
-
 export const loginUsuario = async (req, res) => {
+  const { usuario, claveingreso } = req.body;
+  const client = await getConnection(); 
   try {
-    const { usuario, claveingreso } = req.body;
-    const client = await getConnection();
-
     // Buscar por nombre de usuario
     const result = await client.query(
       'SELECT * FROM usuario WHERE usuario = $1',
@@ -58,5 +41,7 @@ export const loginUsuario = async (req, res) => {
   } catch (error) {
     console.error('Error en login:', error);
     res.status(500).json({ message: 'Error en el servidor', error: error.message });
+  } finally {
+    client.release(); 
   }
 };

@@ -1,6 +1,7 @@
 import { getConnection } from '../conexion.js'
 
 export async function crearPedido(req, res) {
+  const client = await getConnection();
   console.log('BODY:', req.body);
   const { id_metodosdepago, total } = req.body;
   const fecha = new Date();
@@ -8,7 +9,6 @@ export async function crearPedido(req, res) {
   const horaSQL = fecha.toTimeString().slice(0, 8);
 
   try {
-    const client = await getConnection();
     const result = await client.query(
       `INSERT INTO pedido (id_metodosdepago, fecha, hora, total)
        VALUES ($1, $2, $3, $4)
@@ -21,9 +21,13 @@ export async function crearPedido(req, res) {
     console.error('Error al guardar el pedido:', error);
     res.status(500).json({ error: 'Error al guardar el pedido' });
   }
+  finally {
+    client.release();
+  }
 }
 
 export const getDetallePedido = async (req, res) => {
+  const client = await getConnection();
   let { id } = req.params;
   console.log('Obteniendo detalle de pedido para id:', id);
   // Forzar a número si es posible
@@ -31,7 +35,6 @@ export const getDetallePedido = async (req, res) => {
     id = Number(id);
   }
   try {
-    const client = await getConnection();
     const result = await client.query(
       `SELECT dp.*, p.nombre as nombreproducto
        FROM detallepedido dp
@@ -56,13 +59,16 @@ export const getDetallePedido = async (req, res) => {
     console.error('Error al obtener el detalle del pedido:', error.message, error.stack);
     res.status(500).json({ error: 'Error al obtener el detalle del pedido', detalle: error.message });
   }
+  finally {
+    client.release();
+  }
 };
 
 export const crearDetallePedido = async (req, res) => {
+  const client = await getConnection();
   console.log('Recibido en backend:', req.body);
   const { id_pedido, id_producto, cantidad, preciounitario, subtotal, observaciones } = req.body;
   try {
-    const client = await getConnection();
     await client.query(
       `INSERT INTO detallepedido (id_pedido, id_producto, cantidad, preciounitario, subtotal, observaciones)
        VALUES ($1, $2, $3, $4, $5, $6)`,
@@ -72,13 +78,15 @@ export const crearDetallePedido = async (req, res) => {
   } catch (error) {
     console.error('Error al guardar el detalle de pedido:', error);
     res.status(500).json({ error: 'Error al guardar el detalle de pedido' });
+  }finally {
+    client.release();
   }
 };
 
 // Detalles de pedido para administrador
 export const getTodosLosDetallesPedidos = async (req, res) => {
+  const client = await getConnection();
   try {
-    const client = await getConnection();
     const result = await client.query(`
       SELECT 
         dp.id AS id_detalle,
@@ -99,5 +107,8 @@ export const getTodosLosDetallesPedidos = async (req, res) => {
   } catch (error) {
     console.error('Error al obtener todos los detalles de pedidos:', error);
     res.status(500).json({ error: 'Error al obtener los detalles de pedidos' });
+  }
+  finally {
+    client.release();
   }
 };
