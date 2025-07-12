@@ -10,9 +10,11 @@
               <p class="descripcion">Descripcion: {{ item.description }}</p>
               <p class="precio">Precio unitario: ${{ item.price }}</p>
               <p class="titulo-observaciones">Observaciones:</p>
-               <input v-if="item.CategoriaSeccion !== 'Bebida'" v-model="item.observaciones" 
+
+               <input v-if="item.categoriaseccion !== 'Bebida'" v-model="item.observaciones" 
                placeholder="Ej: Sin Mayonesa" class="observaciones"/>
-              <label v-if="item.CategoriaSeccion === 'Burguers'" class="medallon-extra">
+
+              <label v-if="item.categoriaseccion === 'Burguers'" class="medallon-extra">
                   <input type="checkbox" v-model="item.medallonExtra" />
                   Medallón extra (+$1500)
               </label>
@@ -86,7 +88,7 @@ const removeItem = (idx) => {
 const totalPrice = computed(() => {
   return props.cart.reduce((sum, item) => {
     let price = Number(item.price) || 0
-    if (item.CategoriaSeccion === 'Burguers' && item.medallonExtra) price += 1500 // Agrega $1500 si tiene medallón extra
+    if (item.categoriaseccion === 'Burguers' && item.medallonExtra) price += 1500 // Agrega $1500 si tiene medallón extra
     return sum + price
   }, 0)
 })
@@ -117,7 +119,7 @@ const confirmarCompra = async () => {
 
       // Guarda cada producto del carrito en DetallePedido
       for (const item of props.cart) {
-        const precioFinal = item.CategoriaSeccion === 'Burguers' && item.medallonExtra
+        const precioFinal = item.categoriaseccion === 'Burguers' && item.medallonExtra
           ? Number(item.price) + 1500
           : Number(item.price);
         await fetch(`${API_URL}/api/pedidos/detallepedido`, {
@@ -129,7 +131,7 @@ const confirmarCompra = async () => {
             cantidad: 1,
             preciounitario: precioFinal,
             subtotal: precioFinal,
-            observaciones: (item.observaciones || '') + (item.CategoriaSeccion === 'Burguers' && item.medallonExtra ? ' + Medallón extra' : '')
+            observaciones: (item.observaciones || '') + (item.categoriaseccion === 'Burguers' && item.medallonExtra ? ' + Medallón extra' : '')
           })
         });
       }

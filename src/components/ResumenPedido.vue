@@ -56,8 +56,8 @@
         <tr v-for="detalle in detalles" :key="detalle.id">
           <td>{{ detalle.cantidad }}</td>
           <td>{{ detalle.nombreproducto }}</td>
-          <td>{{ detalle.preciounitario }}</td>
-          <td>{{ detalle.observaciones }}</td>
+          <td>${{ detalle.preciounitario }}</td>
+          <td>{{ detalle.observaciones || 'Sin observaciones'}}</td>
           <td>{{ detalle.subtotal }}</td>
         </tr>
       </tbody>
@@ -297,6 +297,11 @@ onMounted(async () => {
 }
 .enviar-pedido-whatsapp:hover {
   background-color: var(--secondary-color); /* Mostaza más clara al pasar el mouse */
+}
+.formas-entrega button.seleccionado {
+  background-color: var(--secondary-color);
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 </style>
