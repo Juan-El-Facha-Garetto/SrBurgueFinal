@@ -15,7 +15,12 @@
         <p class="descripcion">{{ producto.descripcion }}</p>
         <p class="precio">Precio: ${{ producto.precio }}</p>
 
-        <input type="number" min="1" v-model.number="cantidades[producto.id]" style="width: 60px; margin-right: 8px;"/>
+       <!-- Selector de cantidad con botones -->
+        <div class="cantidad-selector">
+          <button @click="decrementarCantidad(producto.id)" :disabled="(cantidades[producto.id] || 1) <= 1">-</button>
+          <span class="cantidad-display">{{ cantidades[producto.id] || 1 }}</span>
+          <button @click="incrementarCantidad(producto.id)">+</button>
+        </div>
 
         <button @click="agregar(producto)">Agregar al carrito</button>
       </li>
@@ -61,6 +66,22 @@ const agregar = (producto) => {
   cantidades.value[producto.id] = 1
   mensaje.value = `¡${cantidad} ${producto.nombre}${cantidad > 1 ? 's' : ''} agregado${cantidad > 1 ? 's' : ''} al carrito!`
   setTimeout(() => mensaje.value = '', 1800)
+}
+
+const incrementarCantidad = (productoId) => {
+  if (!cantidades.value[productoId]) {
+    cantidades.value[productoId] = 1
+  }
+  cantidades.value[productoId]++
+}
+
+const decrementarCantidad = (productoId) => {
+  if (!cantidades.value[productoId]) {
+    cantidades.value[productoId] = 1
+  }
+  if (cantidades.value[productoId] > 1) {
+    cantidades.value[productoId]--
+  }
 }
 
 const API_URL = process.env.VUE_APP_API_URL;
@@ -165,5 +186,57 @@ button:hover {
   font-weight: bold;
   color: black;
   margin: 5px 0;
+}
+.cantidad-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.cantidad-selector button {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #000000;
+  background: var(--primary-color);
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cantidad-selector button:hover {
+  background: var(--secondary-color);
+}
+
+.cantidad-selector button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cantidad-display {
+  font-size: 18px;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+  font-family: 'Georgia', serif;
+}
+
+/* Responsive para celulares */
+@media (max-width: 768px) {
+  .cantidad-selector button {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+  
+  .cantidad-display {
+    font-size: 20px;
+  }
 }
 </style>
