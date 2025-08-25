@@ -105,30 +105,30 @@ const enviarPorWhatsapp = () => {
     formaentrega.value === 'envio' &&
     (!direccionentrega.value.trim())
   ) {
-    alert('Por favor, completa la dirección');
+    alert('Por favor, completa la dirección.');
     return;
   }
   if (
     formaentrega.value === 'envio' &&
     !ciudad.value.trim()
   ) {
-    alert('Por favor, completa la ciudad');
+    alert('Por favor, completa la ciudad.');
     return;
   }
 
   let mensaje = `*SR Burgues*\n\n*Pedido* #${pedidoid}\n`;
 
-  mensaje += `*A nombre de:* ${nombreentrega.value}\n\n`; 
+  mensaje += `*A nombre de:* ${nombreentrega.value}\n\n.`; 
   mensaje += `*Forma de entrega:* ${formaentrega.value === 'retiro' ? 'Retiro en sucursal' : 'Envío'}\n`;
   
   if (formaentrega.value === 'envio') {
     mensaje += `*Dirección de entrega*: ${direccionentrega.value}\n`;
     mensaje += `*Ciudad:* ${ciudad.value}\n\n`;
   } else {
-    mensaje += `*Sucursal:* Av. 9 De Julio 1851, San Francisco\n\n`;
+    mensaje += `*Sucursal:* Av. 9 De Julio 1851, San Francisco\n\n.`;
   }
   
-  mensaje += `*Método de pago:* ${metodo === 1 ? 'Efectivo' : 'Transferencia'}\n\n`;
+  mensaje += `*Método de pago:* ${metodo === 1 ? 'Efectivo.' : 'Transferencia.'}\n\n`;
 
   // Agregar datos de transferencia si corresponde
   if (metodo === 2 && cuentastransferencia.value.length > 0) {
