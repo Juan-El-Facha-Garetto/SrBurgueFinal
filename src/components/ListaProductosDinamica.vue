@@ -114,8 +114,9 @@ const totalItems = computed(() => cart.value.length)
 
 .notificacion {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 40px; /* Aparece 40px arriba del borde inferior */
   background: #4caf50;
   color: #fff;
   padding: 14px 24px;
