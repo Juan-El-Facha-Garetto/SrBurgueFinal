@@ -191,7 +191,7 @@ button:hover {
 .cantidad-selector {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
   margin: 10px 0;
 }
