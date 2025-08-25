@@ -103,12 +103,15 @@ const enviarPorWhatsapp = () => {
   }
   if (
     formaentrega.value === 'envio' &&
-    (!direccionentrega.value.trim() || !ciudad.value.trim())
+    (!direccionentrega.value.trim())
   ) {
     alert('Por favor, completa la dirección');
     return;
   }
-  if(!ciudad.value.trim()) {
+  if (
+    formaentrega.value === 'envio' &&
+    !ciudad.value.trim()
+  ) {
     alert('Por favor, completa la ciudad');
     return;
   }
