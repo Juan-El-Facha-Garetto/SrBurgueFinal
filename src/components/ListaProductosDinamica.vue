@@ -125,7 +125,7 @@ const totalItems = computed(() => cart.value.length)
   font-family: 'Georgia', serif;
   z-index: 1000;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  transition: opacity 0.6s;
+  transition: opacity 1.5s;
 }
 
 
