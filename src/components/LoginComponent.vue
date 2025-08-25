@@ -12,7 +12,7 @@
       </div>
       <button type="submit" class="iniciar-button">Iniciar Sesión</button>
     </form>
-    <button class="iniciar-button" @click="irAHome">Iniciar a Home</button>
+    <button class="iniciar-button" @click="irAHome">Regresar al Inicio</button>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
 </template>

@@ -78,7 +78,7 @@ const route = useRoute();
 const router = useRouter();
 const pedidoid = route.params.id;
 const metodo = Number(route.params.metodo);
-
+const emit = defineEmits(['clear.cart']);
 const detalles = ref([]);
 const total = ref(0);
 const cuentastransferencia = ref([]);
@@ -106,7 +106,11 @@ const enviarPorWhatsapp = () => {
     formaentrega.value === 'envio' &&
     (!direccionentrega.value.trim() || !ciudad.value.trim())
   ) {
-    alert('Por favor, completa la dirección y la ciudad para el envío.');
+    alert('Por favor, completa la dirección');
+    return;
+  }
+  if(!ciudad.value.trim()) {
+    alert('Por favor, completa la ciudad');
     return;
   }
 
@@ -149,6 +153,7 @@ const enviarPorWhatsapp = () => {
   const telefono = '3564659182'; // <-- tu número aquí
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
+  emit('clear.cart');
 };
 
 onMounted(async () => {
