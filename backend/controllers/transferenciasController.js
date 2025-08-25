@@ -3,7 +3,7 @@ import { getConnection } from '../conexion.js';
 export const getCuentasTransferencia = async (req, res) => {
   const client = await getConnection();
   try {
-    const result = await client.query('SELECT * FROM CuentaTransferencia');
+    const result = await client.query('SELECT * FROM cuentatransferencia');
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener cuentas de transferencia' });
