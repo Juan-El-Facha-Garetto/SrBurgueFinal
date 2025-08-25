@@ -78,7 +78,6 @@ const route = useRoute();
 const router = useRouter();
 const pedidoid = route.params.id;
 const metodo = Number(route.params.metodo);
-const emit = defineEmits(['clear-cart']);
 const detalles = ref([]);
 const total = ref(0);
 const cuentastransferencia = ref([]);
@@ -153,7 +152,6 @@ const enviarPorWhatsapp = () => {
   const telefono = '3564659182'; // <-- tu número aquí
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
-  emit('clear-cart');
 };
 
 onMounted(async () => {
