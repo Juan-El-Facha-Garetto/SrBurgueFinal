@@ -153,7 +153,7 @@ const enviarPorWhatsapp = () => {
   const telefono = '3564659182'; // <-- tu número aquí
   const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
   window.open(url, '_blank');
-  emit('clear.cart');
+  emit('clear-cart');
 };
 
 onMounted(async () => {
