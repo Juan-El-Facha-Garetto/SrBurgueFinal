@@ -15,7 +15,7 @@ defineProps({
 <style scoped>
 .carrito-flotante {
   position: fixed;
-  top: 20px;
+  top: 80px;
   right: 30px;
   background: var(--primary-color);
   border: 2px solid black;
